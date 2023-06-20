@@ -1,7 +1,7 @@
 {
   "en": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "All Matches",
       "MyMatches": "My Matches",
       "MyTeams": "My Teams",
@@ -367,7 +367,7 @@
   },
   "fr": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "Tous les matchs",
       "MyMatches": "Mes matchs",
       "MyTeams": "Mon équipe",
@@ -733,7 +733,7 @@
   },
   "jp": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "マッチリスト",
       "MyMatches": "あなたのマッチ",
       "MyTeams": "あなたのチーム",
