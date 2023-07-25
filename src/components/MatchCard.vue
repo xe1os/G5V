@@ -42,7 +42,7 @@
         sm="12"
         xs="12"
         class="align-self-center"
-      >  <div class="text-center">
+      >  <div class="text-center" style="display: flex;justify-content: center;gap: 1%;">
     <v-btn
       rounded
       color="#005e62"
@@ -134,12 +134,4 @@ export default {
   }
 };
 </script>
-
-<style>
-.text-center {
-  display: flex;
-  justify-content: center;
-  gap: 1%;
-}
-</style>
 
