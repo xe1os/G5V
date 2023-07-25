@@ -90,7 +90,7 @@ tbody {
     background: #0a9489d6 !important;
   }
   td:first-child {
-    color: #ffee58;
+    color: #d4e157;
   }
 }
 </style>

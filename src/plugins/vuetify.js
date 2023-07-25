@@ -17,7 +17,7 @@ export default new Vuetify({
         footer: colors.lightBlue
       },
       dark: {
-        primary: colors.yellow.lighten1,
+        primary: colors.lime.lighten1,
         background: colors.lime.darken4,
         footer: colors.green.darken1,
         table: colors.green.darken1

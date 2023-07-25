@@ -9,6 +9,7 @@
       :no-data-text="$t('Veto.NoData')"
       :expanded.sync="expanded"
       show-expand
+      
     >
       <template v-slot:item.map="{ item }">
         <b v-if="item.pick_or_veto === 'pick'">
@@ -18,7 +19,7 @@
           {{ item.map }}
         </div>
       </template>
-      <template v-slot:item.pick_or_veto="{ item }">
+      <template v-slot:item.pick_or_veto="{ item }" >
         <b v-if="item.pick_or_veto === 'pick'">
           {{ $t("Veto.VetoPick") }}
         </b>
@@ -70,6 +71,7 @@
             :items="[item]"
             disable-sort
             :colspan="headers.length"
+            
           />
         </td>
       </template>

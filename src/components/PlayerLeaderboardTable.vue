@@ -90,9 +90,9 @@ export default {
           value: "assists",
           groupable: false
         },
-        {
-          text: this.$t("PlayerStats.FlashbangAssists"),
-          value: "fba",
+         {
+          text: this.$t("PlayerStats.ADR"),
+          value: "adr",
           groupable: false
         },
         {
@@ -115,8 +115,8 @@ export default {
     additionalHeaders() {
       return [
         {
-          text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          text: this.$t("PlayerStats.FlashbangAssists"),
+          value: "fba"
         },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
@@ -184,7 +184,7 @@ tbody {
     background: #0a9489d6 !important;
   }
   td:first-child {
-    color: #ffee58;
+    color: #d4e157;
   }
 }
 </style>

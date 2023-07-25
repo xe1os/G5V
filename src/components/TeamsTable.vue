@@ -230,7 +230,7 @@ export default {
 <style>
 tr:hover {
   cursor:pointer;
-  color: yellow;
+  color: #d4e157;
 }
 </style>
 <style lang="scss">
@@ -239,7 +239,7 @@ tbody {
     background: #0a9489d6 !important;
   }
   td:first-child {
-    color: #ffee58;
+    color: #d4e157;
   }
 }
 </style>
