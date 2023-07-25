@@ -35,6 +35,35 @@
         <v-spacer />
       </v-col>
     </v-row>
+     <v-row>
+      <v-col
+        lg="12"
+        md="12"
+        sm="12"
+        xs="12"
+        class="align-self-center"
+      >  <div class="text-center">
+    <v-btn
+      rounded
+      color="#005e62"
+      dark
+       x-large
+      v-on:click="handled"
+    >
+      All Matches
+    </v-btn>
+        <v-btn
+      rounded
+      color="#005e62"
+      dark
+       x-large
+       v-on:click="handlet"
+    >
+      All Teams
+    </v-btn>
+  </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -52,6 +81,12 @@ export default {
     await this.GetLimitedMatches();
   },
   methods: {
+    handled() {
+      window.location.href = "/matches";
+    },
+    handlet() {
+      window.location.href = "/teams";
+    },
     async GetLimitedMatches() {
       try {
         let res;
@@ -99,3 +134,12 @@ export default {
   }
 };
 </script>
+
+<style>
+.text-center {
+  display: flex;
+  justify-content: center;
+  gap: 1%;
+}
+</style>
+
