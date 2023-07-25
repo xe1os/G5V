@@ -162,7 +162,7 @@ export default {
   },
   methods: {
     handleClick(event, item) {
-    window.location.href = "/match/" + item.item.id
+    window.location.href = "/teams/" + item.item.id
     },
     async GetTeams() {
       this.isLoading = true;
