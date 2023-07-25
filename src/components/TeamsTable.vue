@@ -10,6 +10,7 @@
       :options.sync="options"
       :server-items-length="totalTeams"
       ref="TeamsTable"
+      @click:row="handleClick"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -25,14 +26,10 @@
         </v-toolbar>
       </template>
       <template v-slot:item.id="{ item }">
-        <router-link :to="{ path: '/teams/' + item.id }">
-          {{"Team - " + item.id }}
-        </router-link>
+        {{ item.id }}
       </template>
       <template v-slot:item.owner="{ item }">
-        <router-link :to="{ path: '/user/' + item.user_id }">
-          {{ item.owner }}
-        </router-link>
+        {{ item.owner }}
       </template>
       <template v-slot:item.flag="{ item }">
         <img :src="get_flag_link(item)" style="border-radius: 5px;" />
@@ -164,6 +161,9 @@ export default {
     }
   },
   methods: {
+    handleClick(event, item) {
+    window.location.href = "/match/" + item.item.id
+    },
     async GetTeams() {
       this.isLoading = true;
       this.teams = [];
@@ -227,6 +227,12 @@ export default {
   }
 };
 </script>
+<style>
+tr:hover {
+  cursor:pointer;
+  color: yellow;
+}
+</style>
 <style lang="scss">
 tbody {
   tr:hover {

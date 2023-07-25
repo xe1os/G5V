@@ -182,7 +182,7 @@
     "Matches": {
       "YourMatches": "Your matches",
       "AllMatches": "All matches",
-      "MatchID": "Match Room",
+      "MatchID": "Match ID",
       "Team1": "Team 1",
       "Team2": "Team 2",
       "Status": "Status",
@@ -245,7 +245,7 @@
       "RecentMatches": "Recent Matches",
       "MessageDeleteSuccess": "Successfully deleted team.",
       "DeleteConfirm": "Are you sure you wish to delete this team?",
-      "ID": "Team Page",
+      "ID": "Team ID",
       "Name": "Name",
       "TeamTag": "Tag",
       "Flag": "Flag",
