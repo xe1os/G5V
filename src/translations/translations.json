@@ -1,7 +1,7 @@
 {
   "en": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "All Matches",
       "MyMatches": "My Matches",
       "MyTeams": "My Teams",
@@ -367,7 +367,7 @@
   },
   "fr": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "Tous les matchs",
       "MyMatches": "Mes matchs",
       "MyTeams": "Mon équipe",
@@ -727,13 +727,13 @@
       "Import": "Importer"
     },
     "Footer": {
-      "company": "LOTGaming",
+      "company": "Phlex Plexico",
       "metrics": "Metrics"
     }
   },
   "jp": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CSGO Tournament Panel",
       "AllMatches": "マッチリスト",
       "MyMatches": "あなたのマッチ",
       "MyTeams": "あなたのチーム",
@@ -1087,7 +1087,7 @@
       "Import": "輸入"
     },
     "Footer": {
-      "company": "LOTGaming",
+      "company": "Phlex Plexico",
       "metrics": "メトリック"
     }
   }
