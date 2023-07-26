@@ -195,4 +195,11 @@ tr:hover {
   cursor:pointer;
   color: #d4e157;
 }
+.v-sheet.v-toolbar.v-toolbar--flat {
+  background: unset;
+  background-image: linear-gradient(to right, #035c5e, #0d675e, #23715b, #3a7a55, #53834d);
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
 </style>
