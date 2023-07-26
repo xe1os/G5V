@@ -1,5 +1,5 @@
 <template>
-  <v-container class="vetoInfo" fluid v-if="vetoInfo.length > 1">
+  <v-container style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);" class="vetoInfo" fluid v-if="vetoInfo.length > 1">
     <v-data-table style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);"
       :headers="headers"
       :items="vetoInfo"
@@ -11,7 +11,7 @@
       show-expand
       
     >
-      <template v-slot:item.map="{ item }">
+      <template v-slot:item.map="{ item }" >
         <b v-if="item.pick_or_veto === 'pick'">
           {{ item.map }}
         </b>
@@ -31,7 +31,7 @@
           {{ $t("Veto.VetoBan") }}
         </div>
       </template>
-      <template v-slot:item.team_name="{ item }">
+      <template v-slot:item.team_name="{ item }" >
         <b v-if="item.pick_or_veto === 'pick'">
           <div v-if="item.team_name === 'Decider'">
             {{ $t("Veto.DeciderTeam") }}
@@ -59,7 +59,7 @@
         >
       </template>
 
-      <template v-slot:expanded-item="{ item, headers }">
+      <template v-slot:expanded-item="{ item, headers }" >
         <td :colspan="headers.length">
           <v-data-table
             item-key="id"
@@ -229,3 +229,26 @@ export default {
   }
 };
 </script>
+
+<style>
+.container.vetoInfo.container--fluid {
+  padding: unset;
+}
+.v-data-table.elevation-1.v-data-table--dense.theme--dark {
+  background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);
+}
+tr:hover {
+  cursor:pointer;
+  color: #d4e157;
+}
+</style>
+<style lang="scss">
+tbody {
+  tr:hover {
+    background: #0a9489d6 !important;
+  }
+  td:first-child {
+    color: #d4e157;
+  }
+}
+</style>

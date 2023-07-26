@@ -162,7 +162,7 @@ export default {
   },
   methods: {
     handleClick(event, item) {
-    window.location.href = "/teams/" + item.item.id
+    window.open("/teams/" + item.item.id);
     },
     async GetTeams() {
       this.isLoading = true;

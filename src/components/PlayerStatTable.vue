@@ -1,7 +1,7 @@
 <template>
   <v-container class="statistics" fluid>
     <div v-if="playerstats.length > 0">
-      <v-container style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);"
+      <v-container style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);border-radius:20px;margin-bottom:20px;padding:20px;"
         v-for="(playerMapStats, index) in playerstats"
         :key="playerMapStats[0].id"
       >
@@ -357,4 +357,28 @@ export default {
     }
   }
 };
+
+
+
+
 </script>
+<style>
+.theme--dark.v-data-table {
+  background-color: unset;
+}
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  background: unset;
+}
+</style>
+<style lang="scss">
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  .text-start {
+	font-weight: bold;
+	text-align: center !important;
+  font-size: 1.05rem;
+  }
+}
+.ma-0.v-btn.v-btn--icon.v-btn--round.theme--dark.v-size--small {
+  display:none;
+}
+</style>

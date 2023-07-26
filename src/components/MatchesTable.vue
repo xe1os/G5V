@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     handleClick(event, item) {
-    window.location.href = "/match/" + item.item.id
+      window.open("/match/" + item.item.id);
     },
     async pushMatchData(resultArray) {
       this.isLoading = true;

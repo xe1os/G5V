@@ -10,6 +10,7 @@
       :sort-by="['id']"
       sort-desc
       ref="SeasonsTable"
+      @click:row="handleClick"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -32,9 +33,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.id="{ item }">
-        <router-link :to="{ path: '/season/' + item.id }">
           {{ item.id }}
-        </router-link>
       </template>
       <template v-slot:item.owner="{ item }">
         <router-link :to="{ path: '/user/' + item.user_id }">
@@ -551,6 +550,9 @@ export default {
     }
   },
   methods: {
+    handleClick(event, item) {
+      window.open("/season/" + item.item.id);
+    },
     async GetSeasons() {
       try {
         let res;
@@ -819,5 +821,11 @@ tbody {
   td:first-child {
     color: #d4e157;
   }
+}
+</style>
+<style>
+tr:hover {
+  cursor:pointer;
+  color: #d4e157;
 }
 </style>

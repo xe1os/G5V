@@ -149,3 +149,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.theme--dark.v-btn.v-btn--has-bg {
+  background-color: #ffffff5c;
+}
+</style>

@@ -13,6 +13,7 @@
       ref="PlayerLeaderboardTable"
       :expanded="[]"
       show-expand
+      @click:row="handleClick"
     >
       <template v-slot:top >
         <v-toolbar flat style="border-top-left-radius:20px;border-top-right-radius: 20px;">
@@ -20,9 +21,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.name="{ item }">
-        <router-link :to="{ path: '/user/' + item.steamId }">
           {{ item.name }}
-        </router-link>
       </template>
       <template v-slot:expanded-item="{ item }" class="text-center" >
         <td :colspan="headers.length">
@@ -154,6 +153,9 @@ export default {
     }
   },
   methods: {
+    handleClick(event, item) {
+      window.open("/user/" + item.item.steamId);
+    },
     async GetLeaderboard() {
       try {
         let res;
@@ -186,5 +188,11 @@ tbody {
   td:first-child {
     color: #d4e157;
   }
+}
+</style>
+<style>
+tr:hover {
+  cursor:pointer;
+  color: #d4e157;
 }
 </style>
