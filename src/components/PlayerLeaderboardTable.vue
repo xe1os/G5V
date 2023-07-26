@@ -1,6 +1,6 @@
 <template>
   <v-container class="PlayerLeaderboard" fluid>
-    <v-data-table
+    <v-data-table style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);border-radius:20px;"
       item-key="steamId"
       class="elevation-1"
       :loading="isLoading"
@@ -13,18 +13,17 @@
       ref="PlayerLeaderboardTable"
       :expanded="[]"
       show-expand
+      @click:row="handleClick"
     >
-      <template v-slot:top>
-        <v-toolbar flat>
+      <template v-slot:top >
+        <v-toolbar flat style="border-top-left-radius:20px;border-top-right-radius: 20px;">
           {{ $t("misc.PLeader") }}
         </v-toolbar>
       </template>
       <template v-slot:item.name="{ item }">
-        <router-link :to="{ path: '/user/' + item.steamId }">
           {{ item.name }}
-        </router-link>
       </template>
-      <template v-slot:expanded-item="{ item }" class="text-center">
+      <template v-slot:expanded-item="{ item }" class="text-center" >
         <td :colspan="headers.length">
           <v-data-table
             item-key="steamId"
@@ -36,6 +35,7 @@
             :items="[item]"
             disable-sort
             :colspan="headers.length"
+            style="background: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);"
           />
         </td>
       </template>
@@ -89,9 +89,9 @@ export default {
           value: "assists",
           groupable: false
         },
-        {
-          text: this.$t("PlayerStats.FlashbangAssists"),
-          value: "fba",
+         {
+          text: this.$t("PlayerStats.ADR"),
+          value: "adr",
           groupable: false
         },
         {
@@ -114,8 +114,8 @@ export default {
     additionalHeaders() {
       return [
         {
-          text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          text: this.$t("PlayerStats.FlashbangAssists"),
+          value: "fba"
         },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
@@ -153,6 +153,9 @@ export default {
     }
   },
   methods: {
+    handleClick(event, item) {
+      window.open("/user/" + item.item.steamId);
+    },
     async GetLeaderboard() {
       try {
         let res;
@@ -177,3 +180,26 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+tbody {
+  tr:hover {
+    background: #0a9489d6 !important;
+  }
+  td:first-child {
+    color: #d4e157;
+  }
+}
+</style>
+<style>
+tr:hover {
+  cursor:pointer;
+  color: #d4e157;
+}
+.v-sheet.v-toolbar.v-toolbar--flat {
+  background: unset;
+  background-image: linear-gradient(to right, #035c5e, #0d675e, #23715b, #3a7a55, #53834d);
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+</style>

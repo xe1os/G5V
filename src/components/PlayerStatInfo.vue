@@ -164,3 +164,13 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+tbody {
+  tr:hover {
+    background: #0a9489d6 !important;
+  }
+  td:first-child {
+    color: #d4e157;
+  }
+}
+</style>

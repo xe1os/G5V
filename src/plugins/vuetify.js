@@ -6,6 +6,7 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
   theme: {
+    dark: true,
     themes: {
       light: {
         primary: colors.blue,
@@ -16,9 +17,10 @@ export default new Vuetify({
         footer: colors.lightBlue
       },
       dark: {
-        primary: colors.teal,
-        background: colors.grey.darken3,
-        footer: colors.teal
+        primary: colors.lime.lighten1,
+        background: colors.lime.darken4,
+        footer: colors.green.darken1,
+        table: colors.green.darken1
       }
     }
   }

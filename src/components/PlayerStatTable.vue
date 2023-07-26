@@ -1,7 +1,7 @@
 <template>
   <v-container class="statistics" fluid>
     <div v-if="playerstats.length > 0">
-      <v-container
+      <v-container style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);border-radius:20px;margin-bottom:20px;padding:20px;"
         v-for="(playerMapStats, index) in playerstats"
         :key="playerMapStats[0].id"
       >
@@ -145,23 +145,33 @@ export default {
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.Assists"),
-          value: "assists",
+          text: this.$t("PlayerStats.ADR"),
+          value: "adr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.FlashbangAssists"),
-          value: "flashbang_assists",
+          text: this.$t("PlayerStats.KDR"),
+          value: "kdr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.EnemyFlash"),
-          value: "enemies_flashed",
+          text: this.$t("PlayerStats.FPR"),
+          value: "fpr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.FriendFlash"),
-          value: "friendlies_flashed",
+          text: this.$t("PlayerStats.Headshot") + "%",
+          value: "hsp",
+          groupable: false
+        },
+        {
+          text: this.$t("PlayerStats.KAST"),
+          value: "kast",
+          groupable: false
+        },
+        {
+          text: this.$t("PlayerStats.MVP"),
+          value: "mvp",
           groupable: false
         },
         {
@@ -189,8 +199,20 @@ export default {
           value: "suicides"
         },
         {
-          text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          text: this.$t("PlayerStats.Assists"),
+          value: "assists"
+        },
+        {
+          text: this.$t("PlayerStats.FlashbangAssists"),
+          value: "flashbang_assists"
+        },
+        {
+          text: this.$t("PlayerStats.EnemyFlash"),
+          value: "enemies_flashed"
+        },
+        {
+          text: this.$t("PlayerStats.FriendFlash"),
+          value: "friendlies_flashed"
         },
         {
           text: this.$t("PlayerStats.UtilDamage"),
@@ -209,28 +231,8 @@ export default {
           value: "bomb_defuses"
         },
         {
-          text: this.$t("PlayerStats.Headshot") + "%",
-          value: "hsp"
-        },
-        {
-          text: this.$t("PlayerStats.KDR"),
-          value: "kdr"
-        },
-        {
-          text: this.$t("PlayerStats.FPR"),
-          value: "fpr"
-        },
-        {
-          text: this.$t("PlayerStats.KAST"),
-          value: "kast"
-        },
-        {
           text: this.$t("PlayerStats.ContribScore"),
           value: "contribution_score"
-        },
-        {
-          text: this.$t("PlayerStats.MVP"),
-          value: "mvp"
         }
       ];
     }
@@ -355,4 +357,28 @@ export default {
     }
   }
 };
+
+
+
+
 </script>
+<style>
+.theme--dark.v-data-table {
+  background-color: unset;
+}
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  background: unset;
+}
+</style>
+<style lang="scss">
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  .text-start {
+	font-weight: bold;
+	text-align: center !important;
+  font-size: 1.05rem;
+  }
+}
+.ma-0.v-btn.v-btn--icon.v-btn--round.theme--dark.v-size--small {
+  display:none;
+}
+</style>

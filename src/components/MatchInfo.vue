@@ -8,7 +8,7 @@
       />
     </v-flex>
     <v-flex v-else />
-    <div class="text-h4 names" align="center">
+    <div class="text-h4 names" align="center" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
       <router-link
         v-if="matchInfo.team1.id != 0"
         :to="{ path: '/teams/' + matchInfo.team1_id }"
