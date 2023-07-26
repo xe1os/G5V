@@ -35,7 +35,10 @@
       <div v-else>
         {{ matchInfo.team1_name }}
       </div>
-      {{ $t("Matches.Versus") }}
+      <div class="final-score text-h4" align="center" style="font-weight:bold;">
+         {{ matchInfo.team1_score }} {{ matchInfo.symbol }}
+        {{ matchInfo.team2_score }} 
+      </div>
       <router-link
         v-if="matchInfo.team2.id != 0"
         :to="{ path: '/teams/' + matchInfo.team2_id }"
@@ -63,10 +66,7 @@
         {{ matchInfo.team2_name }}
       </div>
     </div>
-    <div class="final-score text-h4" align="center">
-      {{ matchInfo.team1_score }} {{ matchInfo.symbol }}
-      {{ matchInfo.team2_score }}
-    </div>
+
     <div class="start-date text-subtitle-2" align="center">
       {{ $t("Match.StartTime") }} {{ matchInfo.start_time }}
     </div>
@@ -191,6 +191,10 @@ export default {
   },
   created() {
     this.checkIfMatchLive();
+
+    this.refreshInterval = setInterval(() => {
+      this.checkIfMatchLive();
+    }, 60000);
   },
   methods: {
     async checkIfMatchLive() {
@@ -265,6 +269,9 @@ export default {
     imgUrlAlt(event) {
       if (event.target.src.includes("svg")) this.imageLoaded = false;
       else event.target.src = event.target.src.replace("png", "svg");
+    },
+    beforeDestroy() {
+      clearInterval(this.refreshInterval);
     }
   }
 };

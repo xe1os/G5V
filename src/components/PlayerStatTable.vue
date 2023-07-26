@@ -7,7 +7,7 @@
       >
         <v-container class="mapinfo" fluid>
           <div
-            class="text-subtitle-2 mapInfo"
+            class="text-subtitle-2 mapInfo lot-score"
             v-if="arrMapString[index] != null"
             align="center"
           >
@@ -245,6 +245,7 @@ export default {
       else this.GetMapPlayerStats(matchData);
     },
     async retrieveStatsHelper(serverResponse, matchData) {
+      console.log(matchData.team1_score + " " + matchData.team2_score);
       if (typeof serverResponse == "string") return;
       let allMapIds = [];
       let totalMatchTeam = [];
@@ -368,6 +369,11 @@ export default {
 }
 .theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
   background: unset;
+}
+.text-subtitle-2.mapInfo.lot-score {
+  font-size: 1.4rem !important;
+  margin-bottom: 20px;
+  font-weight: bold;
 }
 </style>
 <style lang="scss">
