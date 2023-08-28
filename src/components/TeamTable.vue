@@ -187,7 +187,6 @@
                         v-model="teamInfo.tag"
                         :label="$t('Team.TeamTag')"
                         :rules="[
-                          v => !!v || $t('misc.Required'),
                           v =>
                             v.length <= 40 ||
                             $t('Team.CharacterLimit', [$t('Team.Name'), 40])
