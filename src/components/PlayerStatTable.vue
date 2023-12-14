@@ -164,10 +164,10 @@ export default {
           value: "hsp",
           groupable: false
         },
-        {
-          text: this.$t("PlayerStats.KAST"),
-          value: "kast",
-          groupable: false
+		{
+          text: this.$t("PlayerStats.UtilDamage"),
+          value: "util_damage"
+		  groupable: false
         },
         {
           text: this.$t("PlayerStats.MVP"),
@@ -215,8 +215,8 @@ export default {
           value: "friendlies_flashed"
         },
         {
-          text: this.$t("PlayerStats.UtilDamage"),
-          value: "util_damage"
+          text: this.$t("PlayerStats.KAST"),
+          value: "kast",
         },
         {
           text: this.$t("PlayerStats.KnifeKills"),
