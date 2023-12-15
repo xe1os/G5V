@@ -166,8 +166,8 @@ export default {
         },
 		{
           text: this.$t("PlayerStats.UtilDamage"),
-          value: "util_damage"
-		  groupable: false
+          value: "util_damage",
+	  groupable: false
         },
         {
           text: this.$t("PlayerStats.MVP"),
@@ -216,7 +216,7 @@ export default {
         },
         {
           text: this.$t("PlayerStats.KAST"),
-          value: "kast",
+          value: "kast"
         },
         {
           text: this.$t("PlayerStats.KnifeKills"),
