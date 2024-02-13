@@ -311,9 +311,9 @@
                 <v-switch
                   v-model="newMatchData.enforce_teams"
                   :label="$t('Check Auths?')"
-                  ref="checkauths"
-                  true-value="1"
-                  false-value="0"
+                  ref="enforce_teams"
+                  true-value=1
+                  false-value=0
                 />
               </v-col>
             </v-row>
