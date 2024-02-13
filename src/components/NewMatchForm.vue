@@ -310,7 +310,7 @@
               <v-col cols="2">
                 <v-switch
                   v-model="newMatchData.enforce_teams"
-                  :label="$t('CreateMatch.CheckAuths')"
+                  :label="$t('Check Auths?')"
                   ref="checkauths"
                 />
               </v-col>
@@ -395,7 +395,7 @@ export default {
       side_type: "standard",
       map_sides: [],
       wingman: false,
-      enforce_teams: true
+      enforce_teams: 1
     },
     selectedTeams: [],
     newDialog: false,
@@ -420,6 +420,9 @@ export default {
     }
   },
   watch: {
+    'newMatchData.enforce_teams': function(newValue) {
+      this.newMatchData.enforce_teams = newValue ? 1 : 0;
+    },
     selectedSeason(val) {
       let arrIndex = this.seasons
         .map(obj => {
