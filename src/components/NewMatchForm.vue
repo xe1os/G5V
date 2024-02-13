@@ -90,6 +90,16 @@
             />
             <v-divider />
             <v-row class="justify-center">
+              <v-col cols="2">
+                <v-switch
+                  v-model="newMatchData.wingman"
+                  :label="$t('CreateMatch.Wingman')"
+                  ref="wingman"
+                />
+              </v-col>
+            </v-row>
+            <v-divider />
+            <v-row class="justify-center">
               <v-col cols="12">
                 <strong>{{ $t("CreateMatch.FormSeriesType") }}</strong>
               </v-col>
@@ -214,13 +224,53 @@
                 />
               </v-col>
             </v-row>
+            <v-row class="justify-center" v-if="newMatchData.skip_veto">
+              <v-col
+                lg="3"
+                md="12"
+                sm="12"
+                v-for="(entity, index) in newMatchData.maps_to_win"
+                :key="index"
+              >
+                <v-col class="text-left text-h6">
+                  {{
+                    $t("CreateMatch.MapSides", {
+                      map:
+                        newMatchData.map_pool[index] == null
+                          ? entity
+                          : newMatchData.map_pool[index]
+                    })
+                  }}
+                </v-col>
+                <v-radio-group row v-model="newMatchData.map_sides[index]">
+                  <v-col lg="12" sm="12" align-self="center">
+                    <v-radio
+                      :label="$t('CreateMatch.MapSidesTeam1CT')"
+                      :value="'team1_ct'"
+                    />
+                  </v-col>
+                  <v-col lg="12" sm="12" align-self="center">
+                    <v-radio
+                      :label="$t('CreateMatch.MapSidesTeam2CT')"
+                      :value="'team1_t'"
+                    />
+                  </v-col>
+                  <v-col lg="12" sm="12" align-self="center">
+                    <v-radio
+                      :label="$t('CreateMatch.MapSidesKnife')"
+                      :value="'knife'"
+                    />
+                  </v-col>
+                </v-radio-group>
+              </v-col>
+            </v-row>
             <v-row class="justify-center">
               <v-radio-group
                 v-model="newMatchData.side_type"
                 row
                 class="justify-center"
               >
-                <v-col lg="4" sm="12" align-self="center">
+                <v-col lg="4" sm="13" align-self="center">
                   <v-radio
                     :label="$t('CreateMatch.KnifeDefault')"
                     :value="'standard'"
@@ -241,18 +291,20 @@
               </v-radio-group>
             </v-row>
             <v-divider />
-            <v-row>
+            <v-col cols="12" class="text-center text-h6">
+              <strong>{{ $t("CreateMatch.ConvarTitle") }}</strong>
+            </v-col>
+            <v-row class="justify-center">
               <v-col cols="12">
-                <strong>{{ $t("CreateMatch.ConvarTitle") }}</strong>
+                <v-combobox
+                  v-model="newMatchData.cvars"
+                  :label="$t('CreateMatch.FormCVARS')"
+                  ref="CVARs"
+                  multiple
+                  chips
+                  deletable-chips
+                />
               </v-col>
-              <v-combobox
-                v-model="newMatchData.cvars"
-                :label="$t('CreateMatch.FormCVARS')"
-                ref="CVARs"
-                multiple
-                chips
-                deletable-chips
-              />
             </v-row>
           </div>
         </v-window-item>
@@ -331,7 +383,9 @@ export default {
       cvars: [],
       veto_first: "team1",
       spectators: [],
-      side_type: "standard"
+      side_type: "standard",
+      map_sides: [],
+      wingman: false
     },
     selectedTeams: [],
     newDialog: false,
@@ -398,15 +452,25 @@ export default {
             seasonCvars.spectators.length < 1
               ? null
               : seasonCvars.spectators.trim().split(" ");
+          this.newMatchData.map_sides =
+            seasonCvars.map_sides.length < 1
+              ? []
+              : seasonCvars.map_sides.trim().split(" ");
+          this.newMatchData.wingman =
+            seasonCvars.wingman == null || seasonCvars.wingman == 0
+              ? false
+              : true;
           //Delete all used get prepare custom CVARs.
           delete seasonCvars.min_players_to_ready;
           delete seasonCvars.min_spectators_to_ready;
           delete seasonCvars.players_per_team;
           delete seasonCvars.maps_to_win;
+          delete seasonCvars.wingman;
           delete seasonCvars.skip_veto;
           delete seasonCvars.map_pool;
           delete seasonCvars.side_type;
           delete seasonCvars.spectators;
+          delete seasonCvars.map_sides;
           // Now set Match CVARs. These will be converted back on submit.
           let tmpCvarArr = [];
           for (var obj in seasonCvars)
@@ -418,8 +482,23 @@ export default {
   },
   async created() {
     this.servers = await this.GetAllAvailableServers();
+    if (typeof this.servers != "string") {
+      this.servers.sort((a, b) => {
+        return a.user_id - this.user.id || b.public_server - a.public_server;
+      });
+    }
     if (this.IsAnyAdmin(this.user)) this.teams = await this.GetAllTeams();
-    else this.teams = await this.GetMyTeams();
+    else {
+      let tmpPublicTeams = await this.GetAllTeams();
+      this.teams = await this.GetMyTeams();
+      tmpPublicTeams.forEach(async team => {
+        if (typeof this.teams === "string") this.teams = [];
+        if (team.public_team == 1) this.teams.push(team);
+      });
+    }
+    this.teams.sort((a, b) => {
+      return a.user_id - this.user.id || a.public_team - b.public_team;
+    });
     this.seasons = await this.GetMyAvailableSeasons();
     if (typeof this.seasons == "string") this.seasons = [];
     this.MapList = await this.GetUserEnabledMapList(this.user.id);
@@ -486,6 +565,7 @@ export default {
             match_cvars: newCvar,
             veto_first: this.newMatchData.veto_first,
             skip_veto: this.newMatchData.skip_veto,
+            wingman: this.newMatchData.wingman,
             spectator_auths: this.newMatchData.spectators,
             min_players_to_ready: parseInt(
               this.newMatchData.min_players_to_ready
@@ -493,7 +573,8 @@ export default {
             players_per_team: parseInt(this.newMatchData.players_per_team),
             min_spectators_to_ready: parseInt(
               this.newMatchData.min_spectators_to_ready
-            )
+            ),
+            map_sides: this.newMatchData.map_sides.join(",")
           }
         ];
         try {

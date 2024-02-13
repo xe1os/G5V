@@ -28,7 +28,10 @@
     </template>
     <v-spacer />
     <template v-slot:item.logo="{ item }">
-      <img :src="apiUrl + '/static/img/logos/' + item + '.png'" />
+      <img
+        :src="apiUrl + '/static/img/logos/' + item + '.png'"
+        @error="imgUrlAlt"
+      />
     </template>
     <v-spacer />
     <template v-slot:item.actions="{ item }">
@@ -96,11 +99,12 @@
           inset
           vertical
         />
-        <div v-if="teamInfo.logo != null && teamInfo.logo != ''">
+        <div v-if="teamInfo.logo != null && teamInfo.logo != '' && imageLoaded">
           <v-toolbar-title>
             <img
               :src="apiUrl + '/static/img/logos/' + teamInfo.logo + '.png'"
               style="padding-top: 5px;; width: 32px; height: 32px;"
+              @error="imgUrlAlt"
             />
           </v-toolbar-title>
         </div>
@@ -199,7 +203,7 @@
                     <v-col cols="12" sm="6" md="4">
                       <v-file-input
                         :label="$t('TeamCreate.TeamLogo')"
-                        accept="image/png"
+                        accept="image/svg+xml, image/png"
                         @change="getFile"
                         truncate-length="12"
                       ></v-file-input>
@@ -280,10 +284,16 @@
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col cols="2" sm="2" md="2">
+                    <v-col cols="6" sm="6" md="6">
                       <v-switch
                         v-model="newAuth.captain"
                         :label="$t('Team.Captain')"
+                      ></v-switch>
+                    </v-col>
+                    <v-col cols="2" sm="2" md="2">
+                      <v-switch
+                        v-model="newAuth.coach"
+                        :label="$t('Team.Coach')"
                       ></v-switch>
                     </v-col>
                   </v-row>
@@ -356,7 +366,7 @@ const resizeImage = file => {
   };
 
   return new Promise((ok, no) => {
-    if (!file.type.match(/image.png/)) {
+    if (!file.type.match(/image.png/) && !file.type.match(/image.svg\+xml/)) {
       no(new Error("Not an image"));
       return;
     }
@@ -384,28 +394,6 @@ export default {
   },
   data() {
     return {
-      userAuthHeaders: [
-        {
-          text: "",
-          value: "tag",
-          sortable: false
-        },
-        {
-          text: this.$t("Team.Username"),
-          value: "username"
-        },
-        {
-          text: this.$t("Team.SteamIDTitle"),
-          align: "start",
-          sortable: true,
-          value: "steamid"
-        },
-        {
-          text: "",
-          value: "actions",
-          sortable: false
-        }
-      ],
       teamAuth: [],
       steamIdList: [],
       newAuth: {},
@@ -433,7 +421,8 @@ export default {
       teamDeleted: false,
       logoFile: null,
       logoPreview: null,
-      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api"
+      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
+      imageLoaded: true
     };
   },
   computed: {
@@ -445,6 +434,30 @@ export default {
       if (this.teamAuth.length == 0) return this.$t("Team.NewMember");
       else if (this.newTeam) return this.$t("Team.NewMember");
       else return this.$t("Team.EditMember");
+    },
+    userAuthHeaders() {
+      return [
+        {
+          text: "",
+          value: "tag",
+          sortable: false
+        },
+        {
+          text: this.$t("Team.Username"),
+          value: "username"
+        },
+        {
+          text: this.$t("Team.SteamIDTitle"),
+          align: "start",
+          sortable: true,
+          value: "steamid"
+        },
+        {
+          text: "",
+          value: "actions",
+          sortable: false
+        }
+      ];
     }
   },
   watch: {
@@ -470,12 +483,14 @@ export default {
             if (this.teamAuth[key].steamid == val.steam) {
               this.newAuth.name = this.teamAuth[key].username;
               this.newAuth.captain = this.teamAuth[key].captain;
+              this.newAuth.coach = this.teamAuth[key].coach;
               this.editInfo = true;
               break;
             }
             this.editInfo = false;
             this.newAuth.name = "";
             this.newAuth.captain = false;
+            this.newAuth.coach = false;
           }
         }
       },
@@ -509,6 +524,10 @@ export default {
     this.flags = this.GetFlags();
   },
   methods: {
+    imgUrlAlt(event) {
+      if (event.target.src.includes("svg")) this.imageLoaded = false;
+      else event.target.src = event.target.src.replace("png", "svg");
+    },
     async GetTeamInfo() {
       try {
         const res = await this.GetTeamData(this.$route.params.id);
@@ -532,7 +551,8 @@ export default {
                 tag: mainTeamInfo[steam_id].image,
                 username: mainTeamInfo[steam_id].name,
                 steamid: steam_id,
-                captain: mainTeamInfo[steam_id].captain
+                captain: mainTeamInfo[steam_id].captain,
+                coach: mainTeamInfo[steam_id].coach
               };
               this.steamIdList.push(steam_id);
               this.teamAuth.push(indTeamMember);
@@ -600,7 +620,8 @@ export default {
         let newTeamMember = {
           [this.newAuth.steam.toString()]: {
             name: this.newAuth.name == null ? "" : this.newAuth.name,
-            captain: this.newAuth.captain == null ? 0 : this.newAuth.captain
+            captain: this.newAuth.captain == null ? 0 : this.newAuth.captain,
+            coach: this.newAuth.coach == null ? 0 : this.newAuth.coach
           }
         };
         let updatedTeam = [
@@ -648,8 +669,9 @@ export default {
       if (!file) {
         this.logoFile = null;
         this.logoPreview = null;
-      } else if (file.type == "svg") {
-        this.logoFile = file;
+      } else if (file.type == "image/svg+xml") {
+        this.logoFile = await file2Base64(file);
+        this.logoPreview = URL.createObjectURL(await resizeImage(file));
       } else {
         this.logoFile = await file2Base64(await resizeImage(file));
         this.logoPreview = URL.createObjectURL(await resizeImage(file));

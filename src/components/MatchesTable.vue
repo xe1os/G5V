@@ -6,8 +6,8 @@
     :loading-text="$t('misc.LoadText')"
     :headers="headers"
     :items="matches"
-    :sort-by="['id']"
-    sort-desc
+    :options.sync="options"
+    :server-items-length="totalMatches"
     ref="MatchesTable"
   >
     <template v-slot:item.id="{ item }">
@@ -70,7 +70,17 @@ export default {
   },
   data() {
     return {
-      headers: [
+      matches: [],
+      isLoading: true,
+      isThereCancelledMatches: false,
+      totalMatches: -1,
+      options: {},
+      deletePending: false
+    };
+  },
+  computed: {
+    headers() {
+      return [
         {
           text: this.$t("Matches.MatchID"),
           align: "start",
@@ -87,66 +97,97 @@ export default {
         },
         {
           text: this.$t("Matches.Status"),
-          value: "match_status"
+          value: "match_status",
+          sortable: false
         },
         {
           text: this.$t("Matches.Owner"),
           value: "owner"
         }
-      ],
-      matches: [],
-      isLoading: true,
-      deletePending: false,
-      isThereCancelledMatches: false
-    };
-  },
-  created() {
-    this.GetMatches();
-  },
-  computed: {
-    myMatches() {
-      return (
-        this.$route.path != "/mymatches" &&
-        this.$route.path != "/" &&
-        !this.$route.path.toString().includes("season")
-      );
+      ];
     },
     isMyMatches() {
       return this.$route.path == "/mymatches";
     }
   },
+  watch: {
+    options: {
+      async handler() {
+        await this.pageUpdate();
+      },
+      deep: true
+    }
+  },
   methods: {
-    async GetMatches() {
-      try {
-        let res;
-        if (this.$route.path == "/mymatches") res = await this.GetMyMatches();
-        else if (this.$route.path.includes("team"))
-          res = await this.GetTeamRecentMatches(this.$route.params.id);
-        else if (this.$route.path.includes("user"))
-          if (this.$route.params.id == undefined) {
-            res = await this.GetUserRecentMatches(this.user.id);
-          } else res = await this.GetUserRecentMatches(this.$route.params.id);
-        else if (this.$route.path.includes("season"))
-          res = await this.GetSeasonRecentMatches(this.$route.params.id);
-        else res = await this.GetAllMatches();
-        if (typeof res == "string") res = [];
-        else {
-          res.forEach(async match => {
-            const ownerRes = await this.GetUserData(match.user_id);
-            let teamId =
-              match.team1_id == null ? match.team2_id : match.team1_id;
-            const statusRes = await this.GetMatchResult(teamId, match.id);
-            match.owner = ownerRes.name;
-            match.match_status = statusRes;
-            if (match.cancelled == 1) this.isThereCancelledMatches = true;
-            this.matches.push(match);
-          });
+    async pushMatchData(resultArray) {
+      this.isLoading = true;
+      let matches = [];
+      let matchString;
+      let team1Score,
+        team2Score = 0;
+      resultArray.forEach(async match => {
+        if (match.max_maps == 1) {
+          team1Score =
+            match.team1_mapscore == undefined ? 0 : match.team1_mapscore;
+          team2Score =
+            match.team2_mapscore == undefined ? 0 : match.team2_mapscore;
+        } else {
+          team1Score = match.team1_score == undefined ? 0 : match.team1_score;
+          team2Score = match.team2_score == undefined ? 0 : match.team2_score;
         }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        this.isLoading = false;
+        if (
+          match.end_time == null &&
+          (match.cancelled == 0 || match.cancelled == null) &&
+          match.start_time != null
+        ) {
+          matchString = `Live, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+        } else if (team1Score < team2Score) {
+          matchString = `Lost, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+        } else if (team1Score > team2Score) {
+          matchString = `Won, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+        } else if (match.cancelled == 1) {
+          matchString = "Cancelled";
+        } else if (team1Score == team2Score && match.forfeit != 1) {
+          matchString = `Tied, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+        } else if (match.winner == match.team1_id) {
+          matchString = `Forfeit win vs ${match.team2_string}`;
+        } else if (match.winner == match.team2_id) {
+          matchString = `Forfeit loss vs ${match.team2_string}`;
+        }
+        match.match_status = matchString;
+        if (match.cancelled == 1) this.isThereCancelledMatches = true;
+        await matches.push(match);
+      });
+      this.isLoading = false;
+      return matches;
+    },
+    async pageUpdate() {
+      let count =
+        this.$route.path == "/mymatches"
+          ? await this.GetMyMatches()
+          : await this.GetAllMatches();
+      const { sortBy, sortDesc, page, itemsPerPage } = this.options;
+      if (typeof count == "string") count = [];
+      if (sortBy.length === 1 && sortDesc.length === 1) {
+        count = count.sort((a, b) => {
+          const sortA = a[sortBy[0]];
+          const sortB = b[sortBy[0]];
+          if (sortDesc[0]) {
+            if (sortA < sortB) return 1;
+            if (sortA > sortB) return -1;
+            return 0;
+          } else {
+            if (sortA < sortB) return -1;
+            if (sortA > sortB) return 1;
+            return 0;
+          }
+        });
       }
+      this.totalMatches = count.length;
+      if (itemsPerPage > 0) {
+        count = count.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+      }
+      this.matches = await this.pushMatchData(count);
       return;
     },
     async deleteCancelled() {
@@ -156,7 +197,7 @@ export default {
       this.matches = [];
       this.isLoading = true;
       this.isThereCancelledMatches = false;
-      await this.GetMatches();
+      await this.pageUpdate();
     }
   }
 };

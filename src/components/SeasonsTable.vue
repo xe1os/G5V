@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-data-table
-      item-key="name"
+      item-key="id"
       class="elevation-1"
       :loading="isLoading"
       :loading-text="$t('misc.LoadText')"
@@ -21,6 +21,13 @@
             v-if="user.id != null"
           >
             {{ $t("Seasons.New") }}
+          </v-btn>
+          <v-btn
+            color="secondary"
+            @click="newImportDialog = true"
+            v-if="user.id != null"
+          >
+            {{ $t("Seasons.ImportSeason") }}
           </v-btn>
         </v-toolbar>
       </template>
@@ -97,6 +104,53 @@
       </v-card>
     </v-dialog>
     <v-dialog
+      v-model="newImportDialog"
+      transition="dialog-bottom-transition"
+      hide-overlay
+      max-width="600px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">
+            {{ $t("Seasons.Import") }}
+          </span>
+        </v-card-title>
+        <v-card-text v-html="$t('Seasons.ImportExplanation')" />
+        <v-card-text>
+          <v-form ref="newImportForm">
+            <v-container>
+              <v-row>
+                <v-col cols="10">
+                  <v-text-field
+                    v-model="challongeInfo.tournament_id"
+                    ref="ChallongeUrl"
+                    :label="$t('Seasons.ImportUrl')"
+                    required
+                  />
+                </v-col>
+                <v-col cols="2">
+                  <v-switch
+                    v-model="challongeInfo.import_teams"
+                    :label="$t('Seasons.ImportTeams')"
+                    ref="skipveto"
+                  />
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" text @click="newImportDialog = false">
+            {{ $t("misc.Cancel") }}
+          </v-btn>
+          <v-btn color="blue darken-1" text @click="importChallongeSeason()">
+            {{ $t("misc.Import") }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
       shake
       v-model="newDialog"
       fullscreen
@@ -150,6 +204,15 @@
                         range
                       />
                     </v-menu>
+                  </v-col>
+                </v-row>
+                <v-row class="justify-center">
+                  <v-col cols="2">
+                    <v-switch
+                      v-model="seasonDefaults.wingman"
+                      :label="$t('CreateMatch.Wingman')"
+                      ref="wingman"
+                    />
                   </v-col>
                 </v-row>
                 <v-row class="justify-center">
@@ -321,6 +384,49 @@
                     </v-col>
                   </v-radio-group>
                 </v-row>
+                <v-row class="justify-center" v-if="seasonDefaults.skip_veto">
+                  <v-col
+                    lg="3"
+                    md="12"
+                    sm="12"
+                    v-for="(entity, index) in seasonDefaults.maps_to_win"
+                    :key="index"
+                  >
+                    <v-col class="text-left text-h6">
+                      {{
+                        $t("CreateMatch.MapSides", {
+                          map:
+                            seasonDefaults.map_pool[index] == null
+                              ? entity
+                              : seasonDefaults.map_pool[index]
+                        })
+                      }}
+                    </v-col>
+                    <v-radio-group
+                      row
+                      v-model="seasonDefaults.map_sides[index]"
+                    >
+                      <v-col lg="12" sm="12" align-self="center">
+                        <v-radio
+                          :label="$t('CreateMatch.MapSidesTeam1CT')"
+                          :value="'team1_ct'"
+                        />
+                      </v-col>
+                      <v-col lg="12" sm="12" align-self="center">
+                        <v-radio
+                          :label="$t('CreateMatch.MapSidesTeam2CT')"
+                          :value="'team1_t'"
+                        />
+                      </v-col>
+                      <v-col lg="12" sm="12" align-self="center">
+                        <v-radio
+                          :label="$t('CreateMatch.MapSidesKnife')"
+                          :value="'knife'"
+                        />
+                      </v-col>
+                    </v-radio-group>
+                  </v-col>
+                </v-row>
                 <v-row class="pt-6">
                   <v-col cols="12">
                     <v-combobox
@@ -359,35 +465,6 @@ export default {
   },
   data() {
     return {
-      headers: [
-        {
-          text: this.$t("Seasons.ID"),
-          align: "start",
-          sortable: true,
-          value: "id"
-        },
-        {
-          text: this.$t("Seasons.Name"),
-          value: "name"
-        },
-        {
-          text: this.$t("Seasons.StartTitle"),
-          value: "start_date"
-        },
-        {
-          text: this.$t("Seasons.EndTitle"),
-          value: "end_date"
-        },
-        {
-          text: this.$t("Matches.Owner"),
-          value: "owner"
-        },
-        {
-          text: "",
-          value: "actions",
-          sortable: false
-        }
-      ],
       seasons: [],
       isLoading: true,
       deleteDialog: false,
@@ -396,6 +473,7 @@ export default {
       removeIndex: -1,
       removeSeason: {},
       newDialog: false,
+      newImportDialog: false,
       newSeason: {
         name: "",
         dates: [],
@@ -409,7 +487,9 @@ export default {
         skip_veto: false,
         map_pool: [],
         spectators: [],
-        side_type: "standard"
+        side_type: "standard",
+        map_sides: [],
+        wingman: false
       },
       datemenu: false,
       formTitle: this.$t("Seasons.NewFormTitle"),
@@ -422,6 +502,10 @@ export default {
           } else
             return tmpDateArr[0] <= tmpDateArr[1] || this.$t("misc.LessThan");
         }
+      },
+      challongeInfo: {
+        tournament_id: "",
+        import_teams: true
       }
     };
   },
@@ -452,10 +536,17 @@ export default {
             skip_veto: false,
             map_pool: [],
             spectators: [],
-            side_type: "standard"
+            side_type: "standard",
+            map_sides: [],
+            wingman: false
           };
           this.$refs.newSeasonForm.resetValidation();
         });
+      }
+    },
+    newImportDialog(val) {
+      if (!val) {
+        this.$refs.newImportForm.resetValidation();
       }
     }
   },
@@ -517,6 +608,7 @@ export default {
     async saveNewSeason() {
       if (this.$refs.newSeasonForm.validate()) {
         let serverRes;
+        let newCvar;
         const splitStr = x => {
           const y = x.split(" ");
           let retVal;
@@ -532,14 +624,20 @@ export default {
           }
           return retVal;
         };
-        let newCvar = Object.assign(
-          {},
-          ...this.newSeason.cvars.map(splitStr),
-          this.seasonDefaults
-        );
-        newCvar.spectators =
-          newCvar.spectators != "" ? newCvar.spectators.join(" ") : "";
-        newCvar.map_pool = newCvar.map_pool.join(" ");
+        if (this.newSeason.cvars) {
+          newCvar = Object.assign(
+            {},
+            ...this.newSeason.cvars.map(splitStr),
+            this.seasonDefaults
+          );
+        }
+        if (newCvar) {
+          newCvar.spectators =
+            newCvar.spectators != "" ? newCvar.spectators.join(" ") : "";
+          newCvar.map_pool = newCvar.map_pool.join(" ");
+          newCvar.map_sides =
+            newCvar.map_sides != "" ? newCvar.map_sides.join(" ") : "";
+        }
         if (this.newSeason.id == null) {
           let serverObj = [
             {
@@ -597,7 +695,9 @@ export default {
             skip_veto: false,
             map_pool: [],
             spectators: [],
-            side_type: "standard"
+            side_type: "standard",
+            map_sides: [],
+            wingman: false
           };
           this.$refs.newSeasonForm.resetValidation();
         });
@@ -612,7 +712,8 @@ export default {
         dateArray.push(new Date(item.end_date).toISOString().substr(0, 10));
       let seasonCvars = await this.GetSeasonCVARs(item.id);
       let tmpArr = [];
-      if (typeof seasonCvars == "string") seasonCvars = null;
+      // If our cvars are empty, make an empty object instead to allow future saving.
+      if (typeof seasonCvars == "string") seasonCvars = {};
       else {
         for (let obj in seasonCvars) {
           if (
@@ -622,9 +723,11 @@ export default {
             obj !== "players_per_team" &&
             obj !== "maps_to_win" &&
             obj !== "skip_veto" &&
+            obj !== "wingman" &&
             obj !== "map_pool" &&
             obj !== "spectators" &&
-            obj !== "side_type"
+            obj !== "side_type" &&
+            obj !== "map_sides"
           )
             tmpArr.push(obj + " " + seasonCvars[obj]);
           else if (
@@ -634,9 +737,11 @@ export default {
             this.seasonDefaults[obj] = seasonCvars[obj].split(" ");
           else if (obj === "maps_to_win")
             this.seasonDefaults[obj] = parseInt(seasonCvars[obj]);
-          else if (obj === "skip_veto") {
+          else if (obj === "skip_veto" || obj === "wingman") {
             seasonCvars[obj] = seasonCvars[obj] == 0 ? false : true;
             this.seasonDefaults[obj] = seasonCvars[obj];
+          } else if (obj === "map_sides") {
+            this.seasonDefaults[obj] = seasonCvars[obj].split(" ");
           } else this.seasonDefaults[obj] = seasonCvars[obj];
         }
       }
@@ -647,11 +752,61 @@ export default {
         name: item.name
       };
       this.newDialog = true;
+    },
+    async importChallongeSeason() {
+      let importData = [this.challongeInfo];
+      let isImport = await this.ImportSeason(importData);
+      if (isImport.id) {
+        this.seasons = [];
+        this.GetSeasons();
+        this.newImportDialog = false;
+      } else {
+        this.response = this.$t("Seasons.ImportError");
+        this.responseSheet = true;
+        this.$nextTick(() => {
+          this.challongeInfo = {
+            tournament_id: "",
+            import_teams: true
+          };
+        });
+      }
+      return;
     }
   },
   computed: {
     dateRangeText() {
       return this.newSeason.dates.join(" ~ ");
+    },
+    headers() {
+      return [
+        {
+          text: this.$t("Seasons.ID"),
+          align: "start",
+          sortable: true,
+          value: "id"
+        },
+        {
+          text: this.$t("Seasons.Name"),
+          value: "name"
+        },
+        {
+          text: this.$t("Seasons.StartTitle"),
+          value: "start_date"
+        },
+        {
+          text: this.$t("Seasons.EndTitle"),
+          value: "end_date"
+        },
+        {
+          text: this.$t("Matches.Owner"),
+          value: "owner"
+        },
+        {
+          text: "",
+          value: "actions",
+          sortable: false
+        }
+      ];
     }
   }
 };

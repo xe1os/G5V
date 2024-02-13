@@ -17,6 +17,7 @@
           <img
             :src="apiUrl + '/static/img/logos/' + matchInfo.team1.logo + '.png'"
             style="border-radius: 5px; width: 40px; height: 32px;"
+            @error="imgUrlAlt"
           />
           {{ matchInfo.team1_name }}
         </div>
@@ -27,11 +28,14 @@
           />
           {{ matchInfo.team1_name }}
         </div>
+        <div v-else>
+          {{ matchInfo.team1_name }}
+        </div>
       </router-link>
       <div v-else>
         {{ matchInfo.team1_name }}
       </div>
-      vs
+      {{ $t("Matches.Versus") }}
       <router-link
         v-if="matchInfo.team2.id != 0"
         :to="{ path: '/teams/' + matchInfo.team2_id }"
@@ -40,6 +44,7 @@
           <img
             :src="apiUrl + '/static/img/logos/' + matchInfo.team2.logo + '.png'"
             style="border-radius: 5px; width: 40px; height: 32px;"
+            @error="imgUrlAlt"
           />
           {{ matchInfo.team2_name }}
         </div>
@@ -134,6 +139,9 @@ export default {
     match_id: Number,
     user: Object
   },
+  sse: {
+    cleanup: true
+  },
   data() {
     return {
       matchInfo: {
@@ -177,50 +185,86 @@ export default {
         port: 0,
         gotv_port: 0
       },
-      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api"
+      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
+      imageLoaded: true
     };
   },
   created() {
-    this.getMatchInfo();
+    this.checkIfMatchLive();
   },
   methods: {
+    async checkIfMatchLive() {
+      let matchRes = await this.GetMatchData(this.match_id);
+      if (matchRes.end_time == null) await this.getStreamedMatchInfo();
+      else await this.getMatchInfo();
+    },
+    async getStreamedMatchInfo() {
+      try {
+        let sseClient = await this.GetEventMatchData(this.match_id);
+        await sseClient.connect();
+        await sseClient.on("matches", async message => {
+          try {
+            await this.retrieveMatchInfoHelper(message);
+          } catch (error) {
+            console.error(
+              "Error retrieving information from matches event stream. ",
+              error
+            );
+          }
+        });
+        return;
+      } catch (ignored) {
+        return;
+      }
+    },
     async getMatchInfo() {
       try {
         let matchRes = await this.GetMatchData(this.match_id);
-        let team1Res = await this.GetBasicTeamInfo(matchRes.team1_id);
-        let team2Res = await this.GetBasicTeamInfo(matchRes.team2_id);
-        let serveRes = await this.GetServerData(matchRes.server_id);
-        this.matchInfo.team1_name = matchRes.team1_string;
-        this.matchInfo.team2_name = matchRes.team2_string;
-        this.matchInfo.team1_id = matchRes.team1_id;
-        this.matchInfo.team2_id = matchRes.team2_id;
-        this.matchInfo.start_time = new Date(matchRes.start_time)
-          .toLocaleString();
+        await this.retrieveMatchInfoHelper(matchRes);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async retrieveMatchInfoHelper(serverResponse) {
+      try {
+        let team1Res = await this.GetBasicTeamInfo(serverResponse.team1_id);
+        let team2Res = await this.GetBasicTeamInfo(serverResponse.team2_id);
+        let serveRes = await this.GetServerData(serverResponse.server_id);
+        this.matchInfo.team1_name = serverResponse.team1_string;
+        this.matchInfo.team2_name = serverResponse.team2_string;
+        this.matchInfo.team1_id = serverResponse.team1_id;
+        this.matchInfo.team2_id = serverResponse.team2_id;
+        this.matchInfo.start_time = new Date(
+          serverResponse.start_time
+        ).toLocaleString();
         this.matchInfo.end_time =
-          matchRes.end_time == null
+          serverResponse.end_time == null
             ? null
-            : new Date(matchRes.end_time)
-                .toLocaleString();
-        this.matchInfo.team1_score = matchRes.team1_score;
-        this.matchInfo.team2_score = matchRes.team2_score;
+            : new Date(serverResponse.end_time).toLocaleString();
+        this.matchInfo.team1_score = serverResponse.team1_score;
+        this.matchInfo.team2_score = serverResponse.team2_score;
         this.matchInfo.symbol = this.GetScoreSymbol(
           this.matchInfo.team1_score,
           this.matchInfo.team2_score
         );
         this.matchInfo.team1 = team1Res;
         this.matchInfo.team2 = team2Res;
-        this.matchInfo.cancelled = matchRes.cancelled;
-        this.matchInfo.forfeit = matchRes.forfeit;
+        this.matchInfo.cancelled = serverResponse.cancelled;
+        this.matchInfo.forfeit = serverResponse.forfeit;
         this.matchInfo.id = this.match_id;
-        this.matchInfo.user_id = matchRes.user_id;
+        this.matchInfo.user_id = serverResponse.user_id;
         if (serveRes) {
           this.serverInfo.ip_string = serveRes.ip_string;
           this.serverInfo.port = serveRes.port;
           this.serverInfo.gotv_port = serveRes.gotv_port;
         }
-      } catch (error) {
-        console.log(error);
+      } catch (err) {
+        console.log(`Error on match helper. The error is ${err.toString()}`);
       }
+    },
+    imgUrlAlt(event) {
+      if (event.target.src.includes("svg")) this.imageLoaded = false;
+      else event.target.src = event.target.src.replace("png", "svg");
     }
   }
 };

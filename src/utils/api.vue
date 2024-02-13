@@ -320,6 +320,20 @@ export default {
       }
       return message;
     },
+    async ImportChallongeTeams(tournamentInfo) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/challonge`,
+          tournamentInfo
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     // END TEAM CALLS
     // BEGIN MATCH CALLS
     async GetMatchData(matchid) {
@@ -346,6 +360,25 @@ export default {
         };
       }
       return message;
+    },
+    async GetEventMatchData(matchid) {
+      let retVal;
+      try {
+        retVal = this.$sse
+          .create({
+            url: `${process.env?.VUE_APP_G5V_API_URL ||
+              "/api"}/matches/${matchid}/stream`,
+            format: "json",
+            withCredentials: true,
+            polyfill: true
+          })
+          .on("error", err =>
+            console.error("Failed to parse or lost connection:", err)
+          );
+      } catch (error) {
+        retVal = error.response.data.message;
+      }
+      return retVal;
     },
     async GetRecentMatches(teamid) {
       let res;
@@ -393,6 +426,20 @@ export default {
       try {
         res = await this.axioCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/limit/${limit}`
+        );
+        message = res.data.matches;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetPagedMatches(offset, limit) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/matches/page/${offset}&${limit}`
         );
         message = res.data.matches;
       } catch (error) {
@@ -721,6 +768,20 @@ export default {
       }
       return message;
     },
+    async ImportSeason(challongeInfo) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/challonge`,
+          challongeInfo
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {
@@ -761,6 +822,34 @@ export default {
       } catch (error) {
         message = error.response.data.message;
       }
+      return message;
+    },
+    async GetEventPlayerStats(matchid) {
+      return this.$sse
+        .create({
+          url: `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/playerstats/match/${matchid}/stream`,
+          format: "json",
+          withCredentials: true,
+          polyfill: true
+        })
+        .on("error", err =>
+          console.error("Failed to parse or lost connection:", err)
+        );
+    },
+    async GetPlayerStatRecentMatches(steamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/playerstats/${steamid}/recent`
+        );
+        message = res.data.matches;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      console.log(message);
       return message;
     },
     // END PLAYER STATS
@@ -922,6 +1011,20 @@ export default {
       }
       return message;
     },
+    async GetRemoteBackups(matchid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/matches/${matchid}/backup/remote`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     async RestoreFromBackup(matchid, backupBody) {
       let res;
       let message;
@@ -930,6 +1033,35 @@ export default {
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/backup/`,
           backupBody
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async RestoreFromRemoteBackup(matchid, backupBody) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/matches/${matchid}/backup/remote`,
+          backupBody
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async RestartCurrentMatch(matchid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/matches/${matchid}/restart/`
         );
         message = res.data;
       } catch (error) {
@@ -954,50 +1086,83 @@ export default {
             `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetosides/${matchid}`
           );
           vetoSideMessage = res.data.vetoes;
-        } catch (error) {
-          console.log("No veto sides found.");
+        } catch (ignored) {
+          // ignore errors
         }
-        vetoMessage.forEach((vetoData) => {
-          if(vetoSideMessage) {
-            let combinedFind = vetoSideMessage.find((vetoSideChoice) => {
-            return (
-              vetoData["id"] === vetoSideChoice["veto_id"] &&
-              vetoData["map"] === vetoSideChoice["map"]
-            );
-          });
-          combinedFind
-            ? combinedVetoInfo.push({
-                id: vetoData.id,
-                match_id: vetoData.match_id,
-                team_name: vetoData.team_name,
-                map: vetoData.map,
-                pick_or_veto: vetoData.pick_or_veto,
-                team_name_side: combinedFind.team_name,
-                side: combinedFind.side,
-              })
-            : combinedVetoInfo.push({
-                id: vetoData.id,
-                match_id: vetoData.match_id,
-                team_name: vetoData.team_name,
-                map: vetoData.map,
-                pick_or_veto: vetoData.pick_or_veto,
-              });
+        vetoMessage.forEach(vetoData => {
+          if (vetoSideMessage) {
+            let combinedFind = vetoSideMessage.find(vetoSideChoice => {
+              return (
+                vetoData["id"] === vetoSideChoice["veto_id"] &&
+                vetoData["map"] === vetoSideChoice["map"]
+              );
+            });
+            combinedFind
+              ? combinedVetoInfo.push({
+                  id: vetoData.id,
+                  match_id: vetoData.match_id,
+                  team_name: vetoData.team_name,
+                  map: vetoData.map,
+                  pick_or_veto: vetoData.pick_or_veto,
+                  team_name_side: combinedFind.team_name,
+                  side: combinedFind.side
+                })
+              : combinedVetoInfo.push({
+                  id: vetoData.id,
+                  match_id: vetoData.match_id,
+                  team_name: vetoData.team_name,
+                  map: vetoData.map,
+                  pick_or_veto: vetoData.pick_or_veto
+                });
           } else {
             combinedVetoInfo.push({
-                id: vetoData.id,
-                match_id: vetoData.match_id,
-                team_name: vetoData.team_name,
-                map: vetoData.map,
-                pick_or_veto: vetoData.pick_or_veto,
-              });
+              id: vetoData.id,
+              match_id: vetoData.match_id,
+              team_name: vetoData.team_name,
+              map: vetoData.map,
+              pick_or_veto: vetoData.pick_or_veto
+            });
           }
-          
         });
         return combinedVetoInfo;
       } catch (error) {
         combinedVetoInfo = error.response.data.message;
       }
       return combinedVetoInfo;
+    },
+    async GetStreamedVetoesOfMatch(matchid) {
+      let combinedVetoInfo;
+      try {
+        combinedVetoInfo = await this.$sse
+          .create({
+            url: `${process.env?.VUE_APP_G5V_API_URL ||
+              "/api"}/vetoes/${matchid}/stream`,
+            format: "json",
+            withCredentials: true,
+            polyfill: true
+          })
+          .on("error", err =>
+            console.error("Failed to parse or lost connection:", err)
+          );
+      } catch (error) {
+        combinedVetoInfo = error.response.data.message;
+      }
+      return combinedVetoInfo;
+    },
+    async GetStreamedVetoSidesOfMatch(matchid) {
+      let retVal;
+      try {
+        retVal = await this.$sse.create({
+          url: `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/vetosides/${matchid}/stream`,
+          format: "json",
+          withCredentials: true,
+          polyfill: true
+        });
+      } catch (error) {
+        retVal = error.response.data.message;
+      }
+      return retVal;
     },
     // END VETO CALLS
     // BEGIN LEADERBOARD CALLS
@@ -1056,6 +1221,36 @@ export default {
       return message;
     },
     // END LEADERBOARD CALLS
+    // BEGIN REGISTRATION CALLS
+    async login(userinfo) {
+      let message;
+      let res;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/login`,
+          userinfo
+        );
+        return res.data.message;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async register(userinfo) {
+      let message;
+      let res;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/register`,
+          userinfo
+        );
+        return res.data.message;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    // END REGISTRATION CALLS
     GetSteamURL: function(steamid) {
       return `https://steamcommunity.com/profiles/${steamid}`;
     },
@@ -1142,6 +1337,7 @@ export default {
         "AR",
         "AT",
         "AU",
+        "BD",
         "BE",
         "BG",
         "BR",

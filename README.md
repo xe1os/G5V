@@ -1,5 +1,16 @@
 # Get5Vue - Front-end website for G5API
-_**Status: Under active development.**_
+_**Status: Supported.**_
+
+After the announcement of CS2 I have decided to put this project on support. No more features will be actively developed, but supoprt will still be given if you need assistance in setting things up. Pull Requests are always welcome and will be reviewed!
+
+---
+
+Like The Project? Feel free to sponsor it! Click the Sponsor button on the repo to see all the possible ways of supporting this development!  
+![Sponsor me](https://phlexplexi.co/sponsor.png)
+
+If you've donated and would like to have your name listed as a sponsor, please message me on Twitter!
+
+---
 
 Get5Vue (G5V) is going to be a replacement for the get5-webpanel. _Currently_ this is an implementation for the extent of [G5API](https://github.com/phlexplexico/G5API) and is going to focus on basic features of presenting data.
 
@@ -14,6 +25,7 @@ Get5Vue (G5V) is going to be a replacement for the get5-webpanel. _Currently_ th
 - Translations
 - Leaderboards
 - Individual User Stats
+- Challonge Integration
 
 ## Issues?
 Please report any *match* issues to the [API](https://github.com/phlexplexico/G5API). Display issues, or loading data, please report them here. If it's something to do with the API, the issue will be transferred.

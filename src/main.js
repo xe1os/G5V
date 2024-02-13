@@ -1,4 +1,5 @@
 import Vue from "vue";
+import VueSSE from "vue-sse";
 import VueI18n from "vue-i18n";
 import App from "./App.vue";
 import "./registerServiceWorker";
@@ -13,12 +14,19 @@ Vue.mixin(api);
 // i18n
 Vue.use(VueI18n);
 
+// Server Side Events
+Vue.use(VueSSE);
+
 // Special thanks to FlowingSPDG for translations.
 const translations = require("./translations/translations.json");
 
 const i18n = new VueI18n({
   locale: "en", // Use English by default
   messages: translations
+});
+
+Vue.filter("translate", function(value) {
+  return i18n.t(value);
 });
 
 new Vue({
