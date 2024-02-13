@@ -312,6 +312,8 @@
                   v-model="newMatchData.enforce_teams"
                   :label="$t('Check Auths?')"
                   ref="checkauths"
+                  true-value="1"
+                  false-value="0"
                 />
               </v-col>
             </v-row>
@@ -420,9 +422,6 @@ export default {
     }
   },
   watch: {
-    'newMatchData.enforce_teams': function(newValue) {
-      this.newMatchData.enforce_teams = newValue ? 1 : 0;
-    },
     selectedSeason(val) {
       let arrIndex = this.seasons
         .map(obj => {
