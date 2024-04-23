@@ -359,7 +359,7 @@ export default {
       if (typeof serverResponse == "string") return;
       await serverResponse.forEach((singleMapStat, index) => {
         console.log(singleMapStat);
-        console.log(arrMapString[index]);
+        console.log(this.arrMapString[index]);
         this.$set(this.arrMapString[index], 'score', "Score: " +
           singleMapStat.team1_score +
           " " +
