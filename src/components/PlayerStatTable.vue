@@ -248,6 +248,7 @@ export default {
       }
     },
     async retrieveStatsHelper(serverResponse, matchData) {
+      console.log(serverResponse);
       if (typeof serverResponse == "string") return;
       let allMapIds = [];
       let totalMatchTeam = [];
