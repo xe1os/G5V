@@ -1,6 +1,6 @@
 <template>
   <v-container class="home" fluid>
-    <PlayerLeaderboardTable :seasonId="parseInt(this.$route.params.seasonid)" />
+    <PlayerLeaderboardTable :teamId="parseInt(this.$route.params.teamid)" :seasonId="parseInt(this.$route.params.seasonid)" />
   </v-container>
 </template>
 

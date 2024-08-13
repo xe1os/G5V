@@ -47,7 +47,8 @@
 export default {
   name: "PlayerLeaderboard",
   props: {
-    seasonId: Number
+    seasonId: Number,
+    teamId: Number
   },
   data() {
     return {
@@ -155,9 +156,15 @@ export default {
   methods: {
     async GetLeaderboard() {
       try {
+    console.log("Season ID: " + this.seasonId);
+    console.log("Team ID: " + this.teamId);
         let res;
-        if (this.seasonId)
+        if (this.seasonId && this.teamId)
+          res = await this.GetSeasonTeamPlayerLeaderboard(this.seasonId, this.teamId);
+        else if (this.seasonId)
           res = await this.GetSeasonPlayerLeaderboard(this.seasonId);
+        else if (this.teamId)
+          res = await this.GetTeamPlayerLeaderboard(this.teamId);
         else res = await this.GetTotalPlayerLeaderboard();
         if (typeof res == "string") return;
         res.forEach(player => {
