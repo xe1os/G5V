@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - iwhite67
 jobs:
   push:
-    name: "g5v:latest"
+    name: "g5v:iwhite67"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -24,7 +24,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
@@ -38,4 +38,4 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:iwhite67
