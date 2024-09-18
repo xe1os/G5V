@@ -15,6 +15,15 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row class="justify-center">
+      <v-col lg="6" sm="12">
+        <v-card>
+          <v-card-title>{{ title }}</v-card-title>
+          <PlayerLeaderboardTable :teamId="parseInt(this.$route.params.id)" />
+        </v-card>
+      </v-col>
+    </v-row>
+    
   </v-container>
 </template>
 
@@ -22,11 +31,13 @@
 // @ is an alias to /src
 import TeamTable from "@/components/TeamTable";
 import MatchTable from "@/components/MatchesTableNoLimits";
+import PlayerLeaderboardTable from "@/components/PlayerLeaderboardTable.vue";
 export default {
   name: "Teams",
   components: {
     TeamTable,
-    MatchTable
+    MatchTable,
+    PlayerLeaderboardTable
   },
   data() {
     return {

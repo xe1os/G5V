@@ -123,9 +123,11 @@ export default {
       this.isLoading = true;
       let matches = [];
       let matchString;
+      let matchbo;
       let team1Score,
         team2Score = 0;
       resultArray.forEach(async match => {
+        matchbo = `Bo${match.max_maps} - `;
         if (match.max_maps == 1) {
           team1Score =
             match.team1_mapscore == undefined ? 0 : match.team1_mapscore;
@@ -154,7 +156,7 @@ export default {
         } else if (match.winner == match.team2_id) {
           matchString = `Forfeit loss vs ${match.team2_string}`;
         }
-        match.match_status = matchString;
+        match.match_status = matchbo + matchString;
         if (match.cancelled == 1) this.isThereCancelledMatches = true;
         await matches.push(match);
       });

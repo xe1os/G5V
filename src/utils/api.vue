@@ -1192,6 +1192,19 @@ export default {
       }
       return message;
     },
+    async GetTeamPlayerLeaderboard(teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     async GetTeamLeaderboard() {
       let res;
       let message;
@@ -1212,6 +1225,20 @@ export default {
         res = await this.axioCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/leaderboard/players/${seasonid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetSeasonTeamPlayerLeaderboard(seasonid, teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/leaderboard/teams/${teamid}/${seasonid}`
         );
         return res.data.leaderboard;
       } catch (error) {
