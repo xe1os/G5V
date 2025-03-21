@@ -51,11 +51,11 @@
 
     <template v-slot:item.ip_string="{ item }">
       <div>
-          {{item.display_name}}
+          {{item.ip_string}}
       </div>
     </template>
 
-    <!-- <template v-slot:item.connect="{ item }">
+    <template v-slot:item.connect="{ item }">
       <div v-if="item.end_time === null">
         <v-btn
           color="primary"
@@ -72,7 +72,7 @@
           {{ $t("Match.Connect") }}
         </v-btn>
       </div>
-    </template> -->
+    </template>
 
     <template v-slot:top>
       <div v-if="isMyMatches && isThereCancelledMatches">
