@@ -55,7 +55,7 @@
       </div>
     </template>
 
-    <template v-slot:item.connect="{ item }">
+    <!-- <template v-slot:item.connect="{ item }">
       <div v-if="item.end_time === null">
         <v-btn
           color="primary"
@@ -72,7 +72,7 @@
           {{ $t("Match.Connect") }}
         </v-btn>
       </div>
-    </template>
+    </template> -->
 
     <template v-slot:top>
       <div v-if="isMyMatches && isThereCancelledMatches">
@@ -134,6 +134,10 @@ export default {
           text: this.$t("Matches.Server"),
           value: "ip_string"
         },   
+        {
+          text: this.$t("Matches.server_name"),
+          value: "server_name"
+        },  
         {
           //text: this.$t("Matches.ConnectButton"),
           value: "connect"
