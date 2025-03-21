@@ -131,8 +131,8 @@ export default {
           value: "owner"
         },
         {
-          text: this.$t("Matches.ip_string" + ":" + "Matches.port"),
-          value: "ip_string"
+          text: this.$t("Matches.ip_string"),
+          value: "ip_string" + ":" + "port"
         },   
         {
           text: this.$t("Matches.server_name"),

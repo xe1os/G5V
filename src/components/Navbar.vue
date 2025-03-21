@@ -5,6 +5,11 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title>{{ $t("Navbar.title") }}</v-toolbar-title>
       <v-spacer></v-spacer>
+
+      <v-btn icon @click="pinned = !pinned">
+        <v-icon>{{ pinned ? "mdi-pin-off" : "mdi-pin" }}</v-icon>
+      </v-btn>
+
       <v-btn rounded :href="apiUrl + '/auth/steam'" v-if="user.id == null">
         <img src="/img/login_small.png" v-if="user.id == null" />
       </v-btn>
@@ -44,7 +49,7 @@
         <img :src="user.small_image" style="border-radius: 15px;" />
       </v-btn>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" temporary fixed app>
+    <v-navigation-drawer v-model="drawer" fixed app>
       <v-list nav>
         <v-list-item-group
           v-model="group"
@@ -135,11 +140,19 @@ export default {
   data() {
     return {
       drawer: false,
+      pinned: false, // New state to track whether the drawer is pinned
       group: null,
       newDialog: false,
       loginDialog: false,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api"
     };
+  },
+  methods: {
+    toggleDrawer() {
+      if (!this.pinned) {
+        this.drawer = !this.drawer;
+      }
+    }
   },
   watch: {
     group() {
