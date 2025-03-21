@@ -51,7 +51,7 @@
 
     <template v-slot:item.ip_string="{ item }">
       <div>
-          {{item.ip_string}}
+          {{item.ip_string + item.port}}
       </div>
     </template>
 
