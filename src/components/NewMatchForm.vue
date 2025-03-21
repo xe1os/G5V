@@ -306,6 +306,17 @@
                 />
               </v-col>
             </v-row>
+            <v-row class="justify-center">
+              <v-col cols="2">
+                <v-switch
+                  v-model="newMatchData.enforce_teams"
+                  :label="$t('Check Auths?')"
+                  ref="enforce_teams"
+                  true-value=1
+                  false-value=0
+                />
+              </v-col>
+            </v-row>
           </div>
         </v-window-item>
       </v-form>
@@ -385,7 +396,8 @@ export default {
       spectators: [],
       side_type: "standard",
       map_sides: [],
-      wingman: false
+      wingman: false,
+      enforce_teams: 1
     },
     selectedTeams: [],
     newDialog: false,
@@ -566,6 +578,7 @@ export default {
             veto_first: this.newMatchData.veto_first,
             skip_veto: this.newMatchData.skip_veto,
             wingman: this.newMatchData.wingman,
+            enforce_teams: this.newMatchData.enforce_teams,
             spectator_auths: this.newMatchData.spectators,
             min_players_to_ready: parseInt(
               this.newMatchData.min_players_to_ready
