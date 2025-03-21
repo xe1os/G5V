@@ -129,15 +129,15 @@ export default {
         {
           text: this.$t("Matches.Owner"),
           value: "owner"
-        },
-        {
-          text: this.$t("Matches.ip_string"),
-          value: "ip_string"
         },   
         {
           text: this.$t("Matches.server_name"),
           value: "server_name"
         },  
+        {
+          text: this.$t("Matches.ip_string"),
+          value: "ip_string"
+        },
         {
           //text: this.$t("Matches.ConnectButton"),
           value: "connect"
