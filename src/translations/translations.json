@@ -187,7 +187,7 @@
       "Team1": "Team 1",
       "Team2": "Team 2",
       "Status": "Status",
-      "Server": "Server IP",
+      "ip_string": "Server IP",
       "server_name": "Server name",
       "Owner": "Owner",
       "DeleteButton": "Delete My Cancelled Matches",
