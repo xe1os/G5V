@@ -8,40 +8,40 @@
         <v-container class="mapinfo" fluid>
           <div
             class="text-subtitle-2 mapInfo"
-            v-if="arrMapString[index] != null"
+            v-if="mapStats[index] != null"
             align="center"
           >
-            {{ arrMapString[index].score }} - {{ arrMapString[index].map }}
+            {{ mapStats[index].score }} - {{ mapStats[index].map }}
           </div>
           <div
             class="text-subtitle-2 mapInfo"
             v-if="
-              arrMapString[index] != null && arrMapString[index].start != null
+              mapStats[index] != null && mapStats[index].start != null
             "
             align="center"
           >
-            {{ arrMapString[index].start }}
+            {{ mapStats[index].start }}
           </div>
           <div
             class="text-subtitle-2 mapInfo"
             v-if="
-              arrMapString[index] != null && arrMapString[index].end != null
+              mapStats[index] != null && mapStats[index].end != null
             "
             align="center"
           >
-            {{ arrMapString[index].end }}
+            {{ mapStats[index].end }}
           </div>
           <div
             class="text-subtitle-2 mapInfo"
             v-if="
-              arrMapString[index] != null && arrMapString[index].demo != null
+              mapStats[index] != null && mapStats[index].demo != null
             "
             align="center"
           >
             <v-btn
               small
               color="secondary"
-              :href="apiUrl + '/demo/' + arrMapString[index].demo"
+              :href="apiUrl + '/demo/' + mapStats[index].demo"
             >
               {{ $t("PlayerStats.Download") }}
             </v-btn>
@@ -49,7 +49,7 @@
           <div
             class="text-subtitle-2 mapInfo"
             v-if="
-              arrMapString[index] != null && arrMapString[index].end == null
+              mapStats[index] != null && mapStats[index].end == null
             "
             align="left"
           ></div>
@@ -113,7 +113,7 @@ export default {
     return {
       playerstats: [],
       isLoading: true,
-      arrMapString: [{}],
+      mapStats: [],
       allowRefresh: false,
       timeoutId: -1,
       isFinished: false,
@@ -122,7 +122,6 @@ export default {
   },
   created() {
     this.useStreamOrStaticData();
-    this.getMapString();
   },
   computed: {
     headers() {
@@ -239,19 +238,22 @@ export default {
     async useStreamOrStaticData() {
       // Template will contain v-rows/etc like on main Team page.
       let matchData = await this.GetMatchData(this.match_id);
-      if (matchData.end_time == null) this.GetMapPlayerStatsStream(matchData);
-      else this.GetMapPlayerStats(matchData);
+      if (matchData.end_time == null) {
+           this.GetMapStatsStream(matchData);
+           this.GetMapPlayerStatsStream(matchData);
+      }
+      else {
+           this.getMapString(matchData);
+           this.GetMapPlayerStats(matchData);
+      }
     },
     async retrieveStatsHelper(serverResponse, matchData) {
       if (typeof serverResponse == "string") return;
       let allMapIds = [];
       let totalMatchTeam = [];
-      let allTeamIds = [];
       serverResponse.filter(item => {
         let i = allMapIds.findIndex(x => x == item.map_id);
-        let j = allTeamIds.findIndex(x => x == item.team_id);
         if (i <= -1) allMapIds.push(item.map_id);
-        if (j <= -1) allTeamIds.push(item.team_id);
         return null;
       });
       allMapIds.forEach(map_id => {
@@ -279,11 +281,23 @@ export default {
             let hsp = this.GetHSP(player);
             let kdr = this.GetKDR(player);
             let fpr = this.GetFPR(player);
-            let teamNum = player.team_id == matchData.team1_id ? 1 : 2;
-            let newName =
-              player.team_id == matchData.team1_id
-                ? matchData.team1_string
-                : matchData.team2_string;
+            let teamNum;
+            let newName;
+            if (player.team_id) {
+              teamNum = player.team_id == matchData.team1_id ? 1 : 2;
+              newName =
+                player.team_id == matchData.team1_id
+                  ? matchData.team1_string
+                  : matchData.team2_string;
+            } else {
+              // If we don't have a team ID, we must be pugging. Go based on
+              // Team strings alone.
+              teamNum = player.team_name == matchData.team1_string ? 1 : 2;
+              newName = 
+                player.team_name == matchData.team1_string
+                  ? matchData.team1_string
+                  : matchData.team2_string;
+            }
             this.$set(
               this.playerstats[idx][pIdx],
               "Team",
@@ -324,34 +338,55 @@ export default {
       }
       return;
     },
-    async getMapString() {
+    async GetMapStatsStream(matchData) {
       try {
-        let mapStats = await this.GetMapStats(this.match_id);
-        if (typeof mapStats == "string") return;
-        mapStats.forEach((singleMapStat, index) => {
-          this.arrMapString[index] = {};
-          this.arrMapString[index].score =
-            "Score: " +
-            singleMapStat.team1_score +
-            " " +
-            this.GetScoreSymbol(
-              singleMapStat.team1_score,
-              singleMapStat.team2_score
-            ) +
-            " " +
-            singleMapStat.team2_score;
-          this.arrMapString[index].start =
-            "Map Start: " + new Date(singleMapStat.start_time).toLocaleString();
-          this.arrMapString[index].end =
-            singleMapStat.end_time == null
-              ? null
-              : "Map End: " + new Date(singleMapStat.end_time).toLocaleString();
-          this.arrMapString[index].map = "Map: " + singleMapStat.map_name;
-          this.arrMapString[index].demo = singleMapStat.demoFile;
+        let sseClient = await this.GetEventMapStats(this.match_id);
+        await sseClient.connect();
+        await sseClient.on("mapstats", async message => {
+          await this.retrieveMapStatsHelper(message,matchData);
         });
       } catch (error) {
-        console.log("String error " + error);
+        console.log("Our error: " + error);
+      } finally {
+        this.isLoading = false;
       }
+      return;
+    },
+    async getMapString(matchData) {
+      try {
+        let res = await this.GetMapStats(this.match_id);
+        await this.retrieveMapStatsHelper(res, matchData);
+      } catch (error) {
+        console.log("Our error: " + error);
+      } finally {
+        this.isLoading = false;
+      }
+      return;
+    },
+    async retrieveMapStatsHelper(serverResponse, matchData) {
+      if (typeof serverResponse == "string") return;
+      await serverResponse.forEach((singleMapStat, index) => {
+        if (!this.mapStats[index]) {
+          this.$set(this.mapStats, index, {});
+        }
+
+        this.$set(this.mapStats[index], 'score', "Score: " +
+          singleMapStat.team1_score +
+          " " +
+          this.GetScoreSymbol(
+            singleMapStat.team1_score,
+            singleMapStat.team2_score
+          ) +
+          " " +
+          singleMapStat.team2_score);
+        this.$set(this.mapStats[index], 'start', "Map Start: " + new Date(singleMapStat.start_time).toLocaleString());
+        this.$set(this.mapStats[index], 'end', singleMapStat.end_time == null ?
+          null :
+          "Map End: " + new Date(singleMapStat.end_time).toLocaleString());
+        this.$set(this.mapStats[index], 'map', "Map: " + singleMapStat.map_name);
+        this.$set(this.mapStats[index], 'demo', singleMapStat.demoFile);
+      });
+      if (matchData.end_time != null) this.isFinished = true;
     }
   }
 };
