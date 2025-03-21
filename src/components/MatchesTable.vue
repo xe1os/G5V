@@ -139,7 +139,7 @@ export default {
           value: "ip_string"
         },
         {
-          //text: this.$t("Matches.ConnectButton"),
+          text: this.$t("Matches.ConnectButton"),
           value: "connect"
         }     
       ];
