@@ -1,13 +1,13 @@
 <template>
   <v-container class="statistics" fluid>
     <div v-if="playerstats.length > 0">
-      <v-container
+      <v-container style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);border-radius:20px;margin-bottom:20px;padding:20px;"
         v-for="(playerMapStats, index) in playerstats"
         :key="playerMapStats[0].id"
       >
         <v-container class="mapinfo" fluid>
           <div
-            class="text-subtitle-2 mapInfo"
+            class="text-subtitle-2 mapInfo lot-score"
             v-if="mapStats[index] != null"
             align="center"
           >
@@ -113,7 +113,7 @@ export default {
     return {
       playerstats: [],
       isLoading: true,
-      mapStats: [],
+      mapStats: [{}],
       allowRefresh: false,
       timeoutId: -1,
       isFinished: false,
@@ -144,23 +144,33 @@ export default {
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.Assists"),
-          value: "assists",
+          text: this.$t("PlayerStats.ADR"),
+          value: "adr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.FlashbangAssists"),
-          value: "flashbang_assists",
+          text: this.$t("PlayerStats.KDR"),
+          value: "kdr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.EnemyFlash"),
-          value: "enemies_flashed",
+          text: this.$t("PlayerStats.FPR"),
+          value: "fpr",
           groupable: false
         },
         {
-          text: this.$t("PlayerStats.FriendFlash"),
-          value: "friendlies_flashed",
+          text: this.$t("PlayerStats.Headshot") + "%",
+          value: "hsp",
+          groupable: false
+        },
+		{
+          text: this.$t("PlayerStats.UtilDamage"),
+          value: "util_damage",
+	  groupable: false
+        },
+        {
+          text: this.$t("PlayerStats.MVP"),
+          value: "mvp",
           groupable: false
         },
         {
@@ -188,12 +198,24 @@ export default {
           value: "suicides"
         },
         {
-          text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          text: this.$t("PlayerStats.Assists"),
+          value: "assists"
         },
         {
-          text: this.$t("PlayerStats.UtilDamage"),
-          value: "util_damage"
+          text: this.$t("PlayerStats.FlashbangAssists"),
+          value: "flashbang_assists"
+        },
+        {
+          text: this.$t("PlayerStats.EnemyFlash"),
+          value: "enemies_flashed"
+        },
+        {
+          text: this.$t("PlayerStats.FriendFlash"),
+          value: "friendlies_flashed"
+        },
+        {
+          text: this.$t("PlayerStats.KAST"),
+          value: "kast"
         },
         {
           text: this.$t("PlayerStats.KnifeKills"),
@@ -208,28 +230,8 @@ export default {
           value: "bomb_defuses"
         },
         {
-          text: this.$t("PlayerStats.Headshot") + "%",
-          value: "hsp"
-        },
-        {
-          text: this.$t("PlayerStats.KDR"),
-          value: "kdr"
-        },
-        {
-          text: this.$t("PlayerStats.FPR"),
-          value: "fpr"
-        },
-        {
-          text: this.$t("PlayerStats.KAST"),
-          value: "kast"
-        },
-        {
           text: this.$t("PlayerStats.ContribScore"),
           value: "contribution_score"
-        },
-        {
-          text: this.$t("PlayerStats.MVP"),
-          value: "mvp"
         }
       ];
     }
@@ -248,6 +250,7 @@ export default {
       }
     },
     async retrieveStatsHelper(serverResponse, matchData) {
+      console.log(matchData.team1_score + " " + matchData.team2_score);
       if (typeof serverResponse == "string") return;
       let allMapIds = [];
       let totalMatchTeam = [];
@@ -369,7 +372,6 @@ export default {
         if (!this.mapStats[index]) {
           this.$set(this.mapStats, index, {});
         }
-
         this.$set(this.mapStats[index], 'score', "Score: " +
           singleMapStat.team1_score +
           " " +
@@ -390,4 +392,33 @@ export default {
     }
   }
 };
+
+
+
+
 </script>
+<style>
+.theme--dark.v-data-table {
+  background-color: unset;
+}
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  background: unset;
+}
+.text-subtitle-2.mapInfo.lot-score {
+  font-size: 1.4rem !important;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+</style>
+<style lang="scss">
+.theme--dark.v-data-table .v-row-group__header, .theme--dark.v-data-table .v-row-group__summary {
+  .text-start {
+	font-weight: bold;
+	text-align: center !important;
+  font-size: 1.05rem;
+  }
+}
+.ma-0.v-btn.v-btn--icon.v-btn--round.theme--dark.v-size--small {
+  display:none;
+}
+</style>

@@ -1,0 +1,5 @@
+[33m6a9568f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m Bump ws from 7.5.9 to 7.5.10 (#181)
+[33me89bdd2[m Remove allTeamNames.
+[33m3d543ad[m Include anubis in images.
+[33m7e5df69[m Initialize mapStats index before setting singleMapStat properties (#180)
+[33m1072b25[m Map stats stream (#179)
