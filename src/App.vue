@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <Navbar :user="user" />
-    <v-main>
+    <v-main  style=" background-image: linear-gradient(to right, #22889d, #138897, #038790, #008688, #03857f);"
+  >
       <router-view :key="$route.path" />
     </v-main>
     <Footer />
@@ -36,3 +37,19 @@ export default {
   }
 };
 </script>
+
+<style>
+a {
+  text-decoration: none;
+}
+.theme--dark.v-card {
+  background-color: unset;
+  background-image: linear-gradient(to right, #1d856f, #118072, #067c74, #017775, #047275, #006f77, #006c78, #016979, #00687c, #00667f, #006582, #026384);
+}
+.theme--dark.v-data-table {
+  background-color: unset;
+}
+.v-btn.v-btn--is-elevated.v-btn--fab.v-btn--has-bg.v-btn--round.v-btn--rounded.theme--dark.v-size--small.grey.darken-2 {
+  display:none;
+}
+</style>

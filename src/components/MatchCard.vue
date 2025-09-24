@@ -2,11 +2,10 @@
   <v-container>
     <v-row v-for="(mtch, idx) in matches" :key="mtch.id">
       <v-col
-        lg="8"
+        lg="12"
         md="12"
         sm="12"
         xs="12"
-        offset-lg="2"
         class="align-self-center"
       >
         <v-img
@@ -14,13 +13,13 @@
           max-height="225px"
           :gradient="gradientCalc"
           @error="imageError(idx)"
+          style="border-radius:20px;"
         >
-          <v-card
-            color="rgb(128, 128, 128, 0.4)"
+          <v-card style="background: linear-gradient(90deg, rgba(32, 156, 131, 0.42) 0%, rgba(0, 129, 143, 0.53) 35%, rgba(3, 99, 133, 0.69) 100%)"
             :to="'/match/' + mtch.id"
             max-height="225px"
           >
-            <v-card-title class="text-uppercase justify-center text-center">
+            <v-card-title class="text-uppercase justify-center text-center" style="color: #51975c;">
               {{ mtch.team1_string }}<br />
               VS<br />
               {{ mtch.team2_string }}
@@ -34,6 +33,35 @@
           </v-card>
         </v-img>
         <v-spacer />
+      </v-col>
+    </v-row>
+     <v-row>
+      <v-col
+        lg="12"
+        md="12"
+        sm="12"
+        xs="12"
+        class="align-self-center"
+      >  <div class="text-center" style="display: flex;justify-content: center;gap: 1%;">
+    <v-btn
+      rounded
+      color="#005e62"
+      dark
+       x-large
+      v-on:click="handled"
+    >
+      All Matches
+    </v-btn>
+        <v-btn
+      rounded
+      color="#005e62"
+      dark
+       x-large
+       v-on:click="handlet"
+    >
+      All Teams
+    </v-btn>
+  </div>
       </v-col>
     </v-row>
   </v-container>
@@ -53,6 +81,12 @@ export default {
     await this.GetLimitedMatches();
   },
   methods: {
+    handled() {
+      window.location.href = "/matches";
+    },
+    handlet() {
+      window.location.href = "/teams";
+    },
     async GetLimitedMatches() {
       try {
         let res;
@@ -100,3 +134,4 @@ export default {
   }
 };
 </script>
+

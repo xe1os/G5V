@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-data-table
+    <v-data-table style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);"
       item-key="id"
       class="elevation-1"
       :loading="isLoading"
@@ -10,6 +10,7 @@
       :sort-by="['id']"
       sort-desc
       ref="SeasonsTable"
+      @click:row="handleClick"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -32,9 +33,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.id="{ item }">
-        <router-link :to="{ path: '/season/' + item.id }">
           {{ item.id }}
-        </router-link>
       </template>
       <template v-slot:item.owner="{ item }">
         <router-link :to="{ path: '/user/' + item.user_id }">
@@ -551,6 +550,9 @@ export default {
     }
   },
   methods: {
+    handleClick(event, item) {
+      window.open("/season/" + item.item.id);
+    },
     async GetSeasons() {
       try {
         let res;
@@ -811,3 +813,19 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+tbody {
+  tr:hover {
+    background: #0a9489d6 !important;
+  }
+  td:first-child {
+    color: #d4e157;
+  }
+}
+</style>
+<style>
+tr:hover {
+  cursor:pointer;
+  color: #d4e157;
+}
+</style>

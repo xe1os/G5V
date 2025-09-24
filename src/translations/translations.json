@@ -1,7 +1,7 @@
 {
   "en": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "LOTGaming",
       "AllMatches": "All Matches",
       "MyMatches": "My Matches",
       "MyTeams": "My Teams",
@@ -10,8 +10,8 @@
       "CreateTeam": "Create Team",
       "MyServers": "My Servers",
       "AddServer": "Add New Server",
-      "AllSeasons": "All Seasons",
-      "MySeasons": "My Seasons",
+      "AllSeasons": "All Tournaments",
+      "MySeasons": "My Tournaments",
       "Logout": "Logout",
       "DarkMode": "Toggle Dark Mode",
       "PlayerLeader": "Player Leaderboard",
@@ -70,12 +70,12 @@
       "MessageSendCommandSuccess": "Successfully sent command.",
       "StartTime": "Start:",
       "EndTime": "End:",
-      "Connect": "Connect!",
+      "Connect": "Connect to Server!",
       "GOTVConnect": "Connect to GOTV!"
     },
     "CreateMatch": {
       "FormServer": "Select a Server",
-      "FormSeason": "Select a Season",
+      "FormSeason": "Select a Tournament",
       "ServerSelect": "Server",
       "FormDetail": "Fill Out Match Details",
       "FormError": "You should not be here!",
@@ -88,11 +88,11 @@
       "FormMapPool": "Map Pool",
       "FormMapExplanation": "If you wish to have more maps, visit your user profile to add/edit/remove maps!",
       "FormCVARS": "CVARs",
-      "MessageRegisterSuccess": "Successfully registered match.",
+      "MessageRegisterSuccess": "Successfully Created match.",
       "ServerLabel": "Server",
       "ServerNote": "Not finding what you're looking for? Create it then select it!",
-      "SeasonLabel": "Season",
-      "SeasonNote": "No season to select? Then just press next!",
+      "SeasonLabel": "Tournament",
+      "SeasonNote": "No Tournament to select? Then just press next!",
       "TeamRequired": "A team is required.",
       "TeamCannotBeEqual": "Teams cannot face each other!",
       "BestOf": "Best of ",
@@ -128,11 +128,11 @@
       "RoundsPlayed": "Rounds Played",
       "Rating": "Rating",
       "Suicides": "Suicides",
-      "ADR": "Average Damage Per Round",
+      "ADR": "ADR",
       "BombPlants": "Bomb Plants",
       "BombDefuses": "Bomb Defuses",
       "KDR": "KDR",
-      "FPR": "Frags Per Round",
+      "FPR": "FPR",
       "User": "User",
       "TeamName": "Team",
       "NoStatFound": "No stats are found for the current match.",
@@ -156,22 +156,22 @@
     },
     "Seasons": {
       "Title": "Seasons/Tournaments",
-      "New": "New Season",
+      "New": "New Tournament",
       "NotFinished": "Ongoing",
       "Name": "Name",
       "Dates": "Date Range",
-      "DateTitle": "Season Dates",
+      "DateTitle": "Tournament Dates",
       "CvarHint": "These values will be brought as defaults in EVERY match.",
       "ID": "ID",
       "StartTitle": "Start Date (YYYY/MM/DD)",
       "EndTitle": "End Date (YYYY/MM/DD)",
       "NewFormTitle": "Create New Season/Tournament",
       "EditFormTitle": "Edit Season/Tournament Info",
-      "SeasonCreated": "Season inserted successfully!",
-      "SeasonUpdated": "Season updated successfully!",
-      "SeasonDeleted": "Season deleted successfully!",
-      "DeleteConfirmation": "Are you sure you wish to remove this season?",
-      "DeleteExplain": "This will remove all match associations to the season.",
+      "SeasonCreated": "Tournament inserted successfully!",
+      "SeasonUpdated": "Tournament updated successfully!",
+      "SeasonDeleted": "Tournament deleted successfully!",
+      "DeleteConfirmation": "Are you sure you wish to remove this Tournament?",
+      "DeleteExplain": "This will remove all match associations to the Tournament.",
       "ImportSeason": "Import",
       "Import": "Import From Challonge",
       "ImportExplanation": "Tournament ID (e.g. 10230) or URL (e.g. 'single_elim' for challonge.com/single_elim). If assigned to a subdomain, URL format must be :subdomain-:tournament_url (e.g. 'test-mytourney' for test.challonge.com/mytourney)",
@@ -187,12 +187,12 @@
       "Team2": "Team 2",
       "Status": "Status",
       "Server": "Server",
-      "Owner": "Owner",
+      "Owner": "Host",
       "DeleteButton": "Delete My Cancelled Matches",
       "Versus": "vs"
     },
     "Metrics": {
-      "Get5Metrics": "Get5 Metrics",
+      "Get5Metrics": "Metrics",
       "Users": "Registered Users",
       "Teams": "Saved Teams",
       "Matches": "Matches Created",
@@ -200,7 +200,7 @@
       "Servers": "Public Servers added",
       "Maps": "Maps with stats saved",
       "Players": "Unique Players",
-      "Seasons": "Seasons"
+      "Seasons": "Tournament"
     },
     "MyServers": {
       "NoServersFound": "No servers found.",
@@ -234,7 +234,7 @@
       "FormRCONPassword": "RCON Password",
       "FormGOTVPort": "GOTV Port",
       "FormPublicServer": "Public Server?",
-      "MessageRegisterSuccess": "Successfully registered server.",
+      "MessageRegisterSuccess": "Successfully created server.",
       "MessageeEditSuccess": "Successfully edited server.",
       "NewServerTitle": "New Server",
       "EditServerTitle": "Edit Server",
@@ -263,7 +263,7 @@
       "NewInfo": "New Team Info",
       "NewPlayer": "New Player",
       "EditPlayer": "Edit Player",
-      "NewTag": "NEW",
+      "NewTag": "",
       "Captain": "Team Captain?",
       "WhatIsCaptain": "The first captain to appear on this list will be able to cast vetoes in game. If no captain is selected, the first user on the team list is considered captain.",
       "CharacterLimit": "Team {0} must be less than {1} characters.",
@@ -308,7 +308,7 @@
       "FormCountryFlag": "Country Flag",
       "FormPlayer": "Player",
       "FormPublicTeam": "Public Team",
-      "MessageRegisterSuccess": "Successfully registered team.",
+      "MessageRegisterSuccess": "Successfully created team.",
       "MessageeEditSuccess": "Successfully edited team.",
       "TeamLogo": "Logo",
       "TeamPreview": "Preview:"
@@ -362,13 +362,12 @@
     },
     "Footer": {
       "company": "Phlex Plexico",
-      "metrics": "Metrics",
-      "powered": "Powered by Steam"
+      "metrics": "Metrics"
     }
   },
   "fr": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "LOTGaming",
       "AllMatches": "Tous les matchs",
       "MyMatches": "Mes matchs",
       "MyTeams": "Mon équipe",
@@ -499,7 +498,7 @@
       "BombPlants": "Bombe(s) posées",
       "BombDefuses": "Bombe(s) désamorcées",
       "KDR": "KDR",
-      "FPR": "Frag Par Round",
+      "FPR": "FPR",
       "User": "Utilisateur",
       "TeamName": "Equipe",
       "NoStatFound": "Pas de statistiques trouvées pour le match en cours.",
@@ -549,7 +548,7 @@
     "Matches": {
       "YourMatches": "Vos matchs",
       "AllMatches": "Tous les matchs",
-      "MatchID": "Match ID",
+      "MatchID": "Match Room",
       "Team1": "Equipe 1",
       "Team2": "Equipe 2",
       "Status": "Status",
@@ -612,7 +611,7 @@
       "RecentMatches": "Matchs récents",
       "MessageDeleteSuccess": "Equipe supprimée avec succés.",
       "DeleteConfirm": "Êtes-vous sûr de vouloir supprimer cette équipe ?",
-      "ID": "Team ID",
+      "ID": "Team Page",
       "Name": "Nom",
       "TeamTag": "Tag",
       "Flag": "Drapeau",
@@ -630,7 +629,7 @@
       "NewInfo": "New Team Info",
       "NewPlayer": "Nouveau Joueur",
       "EditPlayer": "Modifier le joueur",
-      "NewTag": "NEW",
+      "NewTag": "",
       "Captain": "Capitaine de l'équipe ?",
       "WhatIsCaptain": "Le premier capitaine à figurer sur cette liste pourra opposer son veto en jeu. Si aucun capitaine n'est sélectionné, le premier utilisateur de la liste d'équipe est considéré comme capitaine.",
       "CharacterLimit": "Equipe {0} doit être inférieur à {1} caractères.",
@@ -728,14 +727,13 @@
       "Import": "Importer"
     },
     "Footer": {
-      "company": "Phlex Plexico",
-      "metrics": "Metrics",
-      "powered": "Powered by Steam"
+      "company": "LOTGaming",
+      "metrics": "Metrics"
     }
   },
   "jp": {
     "Navbar": {
-      "title": "Get5Vue",
+      "title": "LOTGaming",
       "AllMatches": "マッチリスト",
       "MyMatches": "あなたのマッチ",
       "MyTeams": "あなたのチーム",
@@ -862,7 +860,7 @@
       "BombPlants": "爆弾プラント",
       "BombDefuses": "Bomb Defuses",
       "KDR": "ＫＤＲ",
-      "FPR": "Frags Per Round",
+      "FPR": "FPR",
       "User": "ユーザー",
       "TeamName": "チーム",
       "NoStatFound": "現在の試合のスタッツは見つかりませんでした。",
@@ -1089,9 +1087,8 @@
       "Import": "輸入"
     },
     "Footer": {
-      "company": "Phlex Plexico",
-      "metrics": "メトリック",
-      "powered": "Powered by Steam"
+      "company": "LOTGaming",
+      "metrics": "メトリック"
     }
   }
 }

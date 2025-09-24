@@ -1,5 +1,5 @@
 <template>
-  <v-data-table
+  <v-data-table style="background-image: linear-gradient(to right top, #052437, #004254, #006364, #1a8264, #689f59);"
     :headers="userAuthHeaders"
     :items="teamAuth"
     sort-by="calories"
@@ -187,7 +187,6 @@
                         v-model="teamInfo.tag"
                         :label="$t('Team.TeamTag')"
                         :rules="[
-                          v => !!v || $t('misc.Required'),
                           v =>
                             v.length <= 40 ||
                             $t('Team.CharacterLimit', [$t('Team.Name'), 40])
