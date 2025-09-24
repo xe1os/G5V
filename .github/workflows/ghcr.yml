@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - lotgaming
 jobs:
   push:
-    name: "g5v:latest"
+    name: "g5v:lotgaming"
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -38,4 +38,4 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
           tags: |
-            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:lotgaming
