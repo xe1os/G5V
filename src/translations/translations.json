@@ -1,7 +1,7 @@
 {
   "en": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CS2 Match Panel",
       "AllMatches": "All Matches",
       "MyMatches": "My Matches",
       "MyTeams": "My Teams",
@@ -367,7 +367,7 @@
   },
   "fr": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CS2 Match Panel",
       "AllMatches": "Tous les matchs",
       "MyMatches": "Mes matchs",
       "MyTeams": "Mon équipe",
@@ -727,13 +727,13 @@
       "Import": "Importer"
     },
     "Footer": {
-      "company": "LOTGaming",
+      "company": "CS2 Match Panel",
       "metrics": "Metrics"
     }
   },
   "jp": {
     "Navbar": {
-      "title": "LOTGaming",
+      "title": "CS2 Match Panel",
       "AllMatches": "マッチリスト",
       "MyMatches": "あなたのマッチ",
       "MyTeams": "あなたのチーム",
@@ -1087,7 +1087,7 @@
       "Import": "輸入"
     },
     "Footer": {
-      "company": "LOTGaming",
+      "company": "CS2 Match Panel",
       "metrics": "メトリック"
     }
   }
