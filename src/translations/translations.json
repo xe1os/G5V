@@ -230,7 +230,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Your server information will not be exposed to other users.",
-      "Get5Help": "Make sure your server is online and has the latest version of get5 installed.<br>See <a href=\"http://splewis.github.io/get5/latest/installation/\">the installation guide</a> for help installing the get5. PLEASE ENSURE sv_logecho = 1 IS SET ON THE SERVER AND 'log on'",
+      "Get5Help": "Make sure your server is online and has the latest version of MatchZy installed.<br>See <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">the installation guide</a> for help installing the MatchZy. PLEASE ENSURE sv_logecho = 1 IS SET ON THE SERVER AND 'log on'",
       "FormDisplayName": "Display Name",
       "FormServerIP": "Host Name",
       "FormServerHint": "Can be a URL as well.",
