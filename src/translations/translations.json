@@ -226,7 +226,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Your server information will not be exposed to other users.",
-      "Get5Help": "Make sure your server is online and has the latest version of MatchZy installed.<br>See <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">the installation guide</a> for help installing the MatchZy. Please ensure <b>sv_logecho = 1</b> and <b>log on</b> is set in the server.cfg",
+      "Get5Help": "Make sure your server is online and has the latest version of <b>MatchZy</b> installed.<br>See <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">the installation guide</a> for help installing the MatchZy. Please ensure <b>'sv_logecho = 1'</b> and <b>'log on'</b> is set in the server.cfg",
       "FormDisplayName": "Display Name",
       "FormServerIP": "Host Name",
       "FormServerHint": "Can be a URL as well.",
@@ -592,7 +592,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Les informations de votre serveur ne seront pas exposées aux autres utilisateurs.",
-      "Get5Help": "Assurez-vous que votre serveur est en ligne et que la dernière version de MatchZy est installée.<br>Consultez le <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">guide d'installation</a> pour obtenir de l'aide sur l'installation de MatchZy. Veuillez vous assurer que <b>sv_logecho = 1</b> et que <b>log on</b> sont définis dans le fichier server.cfg.",
+      "Get5Help": "Assurez-vous que votre serveur est en ligne et que la dernière version de <b>MatchZy</b> est installée.<br>Consultez le <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">guide d'installation</a> pour obtenir de l'aide sur l'installation de MatchZy. Veuillez vous assurer que <b>'sv_logecho = 1'</b> et que <b>'log on'</b> sont définis dans le fichier server.cfg.",
       "FormDisplayName": "Nom affiché",
       "FormServerIP": "Nom d'hôte",
       "FormServerHint": "Peut aussi être une URL.",
@@ -954,7 +954,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "あなたのサーバー情報は他のユーザーには公開されません。",
-      "Get5Help": "サーバーがオンラインであり、MatchZyの最新バージョンがインストールされていることを確認してください。<br>MatchZyのインストール方法については、<a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">インストールガイド</a>をご覧ください。server.cfgで<b>sv_logecho = 1</b>と<b>log on</b>が設定されていることを確認してください。",
+      "Get5Help": "サーバーがオンラインであり、<b>MatchZy</b>の最新バージョンがインストールされていることを確認してください。<br>MatchZyのインストール方法については、<a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">インストールガイド</a>をご覧ください。server.cfgで<b>'sv_logecho = 1'</b>と<b>'log on'</b>が設定されていることを確認してください。",
       "FormDisplayName": "表示名",
       "FormServerIP": "ホスト名",
       "FormServerHint": "URLにすることもできます。",
