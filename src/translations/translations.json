@@ -226,7 +226,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Your server information will not be exposed to other users.",
-      "Get5Help": "Make sure your server is online and has the latest version of get5 installed.<br>See <a href=\"http://splewis.github.io/get5/latest/installation/\">the installation guide</a> for help installing the get5. PLEASE ENSURE sv_logecho = 1 IS SET ON THE SERVER AND 'log on'",
+      "Get5Help": "Make sure your server is online and has the latest version of MatchZy installed.<br>See <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">the installation guide</a> for help installing the MatchZy. PLEASE ENSURE <b>sv_logecho = 1<b> and <b>log on<b> IS SET IN THE SERVER CFG",
       "FormDisplayName": "Display Name",
       "FormServerIP": "Host Name",
       "FormServerHint": "Can be a URL as well.",
@@ -558,7 +558,7 @@
       "Versus": "vs"
     },
     "Metrics": {
-      "Get5Metrics": "Get5 Metrics",
+      "Get5Metrics": "Metrics",
       "Users": "Utilisateurs inscrits",
       "Teams": "Equipes enregistrées",
       "Matches": "Matchs Créés",
@@ -592,7 +592,7 @@
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Les informations de votre serveur ne seront pas exposées aux autres utilisateurs.",
-      "Get5Help": "Assurez-vous que votre serveur est en ligne et que la dernière version de get5 est installée.<br>Voir <a href=\"http://splewis.github.io/get5/latest/installation/\">le guide d'installation</a> pour l'aide à l'installation de get5. VEUILLEZ VOUS ASSURER que sv_logecho = 1 EST FIXE SUR LE SERVEUR ET que 'log on' est installé.",
+      "Get5Help": "Assurez-vous que votre serveur est en ligne et que la dernière version de MatchZy est installée.<br>Consultez le <a href=\"https://shobhit-pathak.github.io/MatchZy/installation/\">guide d'installation</a> pour obtenir de l'aide sur l'installation de MatchZy. VEUILLEZ VOUS ASSURER QUE <b>sv_logecho = 1<b> et <b>log on<b> sont définis dans le fichier CFG du serveur.",
       "FormDisplayName": "Nom affiché",
       "FormServerIP": "Nom d'hôte",
       "FormServerHint": "Peut aussi être une URL.",
@@ -920,7 +920,7 @@
       "Versus": "対"
     },
     "Metrics": {
-      "Get5Metrics": "Get5 メトリクス",
+      "Get5Metrics": "メトリクス",
       "Users": "登録ユーザー数",
       "Teams": "保存されているチーム",
       "Matches": "作成されたマッチ",
